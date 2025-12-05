@@ -20,11 +20,8 @@ const Navbar = async () => {
     { label: "Contact", href: "/contact" },
   ];
 
-  // Get AccessToken
-  //   const accessToken = await getCookies("accessToken");
-
   return (
-    <header className="">
+    <nav>
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-2 px-4 py-6">
         {/* Logo */}
         <Link href="/">
@@ -87,7 +84,7 @@ const Navbar = async () => {
           </nav>
         </div>
       </div>
-    </header>
+    </nav>
   );
 };
 
