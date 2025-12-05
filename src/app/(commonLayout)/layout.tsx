@@ -14,7 +14,7 @@ const CommonLayout = ({ children }: IProps) => {
 
       <main className="grow">{children}</main>
 
-      <footer className="bg-[#eff1f5]">
+      <footer className="bg-lorvic">
         <Footer />
       </footer>
     </div>

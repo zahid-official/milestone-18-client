@@ -6,6 +6,7 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-lorvic: var(--lorvic);
   --font-sans: var(--font-jost);
   --font-mono: var(--font-geist-mono);
   --font-heading: var(--font-dm-serif-display);
@@ -46,6 +47,7 @@
 
 :root {
   --radius: 0.625rem;
+  --lorvic: oklch(0.9578 0.0058 264.53);
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
   --card: oklch(1 0 0);
@@ -80,6 +82,7 @@
 }
 
 .dark {
+  --lorvic: oklch(0.1752 0.0063 236.98)
   --background: oklch(0.145 0 0);
   --foreground: oklch(0.985 0 0);
   --card: oklch(0.205 0 0);
