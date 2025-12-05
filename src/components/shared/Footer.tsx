@@ -1,5 +1,3 @@
-"use client";
-
 import { Facebook, Github, Instagram, Twitter } from "lucide-react";
 import Link from "next/link";
 import Logo from "./Logo";

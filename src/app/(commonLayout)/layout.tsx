@@ -1,5 +1,5 @@
 import Footer from "@/components/shared/Footer";
-import Navbar from "@/components/shared/Navbar";
+import StickyHeader from "@/components/shared/navbar/StickyHeader";
 
 // Interface for IProps
 interface IProps {
@@ -10,9 +10,7 @@ interface IProps {
 const CommonLayout = ({ children }: IProps) => {
   return (
     <div className="min-h-screen flex flex-col">
-      <header className="w-full mx-auto sticky top-0 bg-background/96 z-50">
-        <Navbar />
-      </header>
+      <StickyHeader />
 
       <main className="grow">{children}</main>
 

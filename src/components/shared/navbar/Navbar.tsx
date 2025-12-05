@@ -7,9 +7,9 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "../ui/dropdown-menu";
-import { Separator } from "../ui/separator";
-import Logo from "./Logo";
+} from "../../ui/dropdown-menu";
+import { Separator } from "../../ui/separator";
+import Logo from "../Logo";
 
 const Navbar = async () => {
   // Navigation links
