@@ -1,3 +1,4 @@
+import Footer from "@/components/shared/Footer";
 import Navbar from "@/components/shared/Navbar";
 
 // Interface for IProps
@@ -15,7 +16,9 @@ const CommonLayout = ({ children }: IProps) => {
 
       <main className="grow">{children}</main>
 
-      <footer></footer>
+      <footer className="bg-[#eff1f5]">
+        <Footer />
+      </footer>
     </div>
   );
 };
