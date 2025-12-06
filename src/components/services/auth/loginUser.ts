@@ -1,6 +1,8 @@
 "use server";
 import envVars from "@/config/envVars";
+import { parse } from "cookie";
 import z from "zod";
+import { setCookies } from "./cookies";
 
 // Schema for login validation
 const loginZodSchema = z.object({
@@ -68,6 +70,35 @@ const loginUser = async (
         message,
       };
     }
+
+    // Handle successful login
+    let accessTokenData: Record<string, string> | undefined;
+    let refreshTokenData: Record<string, string> | undefined;
+    const setCookieHeaders = res.headers.getSetCookie();
+
+    // Extract tokens from Set-Cookie headers
+    if (setCookieHeaders && setCookieHeaders.length > 0) {
+      setCookieHeaders.forEach((cookie: string) => {
+        const parsedCookie = parse(cookie);
+        if (parsedCookie?.accessToken) {
+          accessTokenData = parsedCookie as Record<string, string>;
+        }
+        if (parsedCookie?.refreshToken) {
+          refreshTokenData = parsedCookie as Record<string, string>;
+        }
+      });
+    } else {
+      throw new Error("No Set-Cookie headers found in the response");
+    }
+
+    // Handle invalid tokens
+    if (!accessTokenData || !refreshTokenData) {
+      throw new Error("Invalid token provided, authorization denied");
+    }
+
+    // Set cookies in the response
+    await setCookies("accessToken", accessTokenData.accessToken);
+    await setCookies("refreshToken", refreshTokenData.refreshToken);
 
     return {
       success: true,
