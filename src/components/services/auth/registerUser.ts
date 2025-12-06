@@ -68,6 +68,7 @@ const registerZodSchema = z
     path: ["confirmPassword"],
   });
 
+// Declare types
 type RegisterActionState = {
   success: boolean;
   message?: string;
@@ -81,9 +82,6 @@ const registerUser = async (
   formData: FormData
 ): Promise<RegisterActionState> => {
   try {
-    // Build API endpoint from env
-    const endpoint = `${envVars.BACKEND_URL}/customer/create`;
-
     // Validate incoming form data
     const parsed = registerZodSchema.safeParse({
       name: formData.get("name"),
@@ -110,26 +108,19 @@ const registerUser = async (
     void _confirmPassword;
 
     // Call backend API
-    const response = await fetch(endpoint, {
+    const res = await fetch(`${envVars.BACKEND_URL}/customer/create`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(registerData),
     });
+    const result = await res.json();
 
-    if (!response.ok) {
+    // Handle unsuccessful registration
+    if (!result.success) {
       let message = "Registration failed. Please try again.";
-      try {
-        const errorBody = await response.json();
-        message =
-          errorBody?.message ||
-          errorBody?.error ||
-          errorBody?.errors?.join?.(", ") ||
-          message;
-      } catch {
-        // ignore JSON parse issues, fall back to default message
-      }
+      message = result?.message ?? result?.error;
 
       return {
         success: false,
@@ -137,11 +128,9 @@ const registerUser = async (
       };
     }
 
-    const data = await response.json().catch(() => null);
-
     return {
       success: true,
-      message: data?.message || "Account created successfully.",
+      message: result?.message || "Account created successfully.",
     };
   } catch (error) {
     console.error("registerUser error", error);
