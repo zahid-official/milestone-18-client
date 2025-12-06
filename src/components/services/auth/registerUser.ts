@@ -121,7 +121,6 @@ const registerUser = async (
     if (!result.success) {
       let message = "Registration failed. Please try again.";
       message = result?.message ?? result?.error;
-
       return {
         success: false,
         message,

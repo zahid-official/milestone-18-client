@@ -18,6 +18,7 @@ const loginZodSchema = z.object({
     .trim(),
 });
 
+// Declare types
 type LoginActionState = {
   success: boolean;
   message?: string;
@@ -30,13 +31,13 @@ const loginUser = async (
   formData: FormData
 ): Promise<LoginActionState> => {
   try {
-    const endpoint = `${envVars.BACKEND_URL}/auth/login`;
-
+    // Validate incoming form data
     const parsed = loginZodSchema.safeParse({
       email: formData.get("email"),
       password: formData.get("password"),
     });
 
+    // Map zod issues to a simple array for UI consumption
     if (!parsed.success) {
       return {
         success: false,
@@ -48,38 +49,29 @@ const loginUser = async (
       };
     }
 
-    const response = await fetch(endpoint, {
+    // Call backend API
+    const res = await fetch(`${envVars.BACKEND_URL}/auth/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(parsed.data),
     });
+    const result = await res.json();
 
-    if (!response.ok) {
+    // Handle unsuccessful registration
+    if (!result.success) {
       let message = "Login failed. Please try again.";
-      try {
-        const errorBody = await response.json();
-        message =
-          errorBody?.message ||
-          errorBody?.error ||
-          errorBody?.errors?.join?.(", ") ||
-          message;
-      } catch {
-        // ignore JSON parse issues, fall back to default message
-      }
-
+      message = result?.message ?? result?.error;
       return {
         success: false,
         message,
       };
     }
 
-    const data = await response.json().catch(() => null);
-
     return {
       success: true,
-      message: data?.message || "Logged in successfully.",
+      message: result?.message || "Logged in successfully.",
     };
   } catch (error) {
     console.error("loginUser error", error);
