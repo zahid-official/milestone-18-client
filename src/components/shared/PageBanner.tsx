@@ -14,7 +14,9 @@ const PageBanner = ({ heading, subHeading }: IProps) => {
         <Image src={banner} alt="page banner image" className="flex-1" />
         <div className="flex-1">
           <div className="md:max-w-sm max-w-lg md:text-left text-center space-y-1">
-            <h2 className="sm:text-5xl text-4xl font-medium">{heading}</h2>
+            <h2 className="sm:text-[44px] text-4xl font-medium font-heading">
+              {heading}
+            </h2>
             <p>{subHeading}</p>
           </div>
         </div>

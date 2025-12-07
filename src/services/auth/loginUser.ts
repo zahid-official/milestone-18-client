@@ -61,7 +61,7 @@ const loginUser = async (
     });
     const result = await res.json();
 
-    // Handle unsuccessful registration
+    // Handle unsuccessful login
     if (!result.success) {
       let message = "Login failed. Please try again.";
       message = result?.message ?? result?.error;

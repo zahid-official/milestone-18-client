@@ -13,7 +13,7 @@ const LoginPage = () => {
       <div className="px-4 py-28 max-w-7xl mx-auto space-y-10">
         {/* Heading */}
         <div className="text-center max-w-xl mx-auto space-y-1">
-          <h2 className="text-4xl font-medium">Login</h2>
+          <h2 className="text-4xl font-semibold">Login</h2>
           <p className="text-muted-foreground">
             Please fill your email and password to login
           </p>

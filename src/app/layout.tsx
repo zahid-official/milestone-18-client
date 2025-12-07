@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { DM_Serif_Display, Geist_Mono, Jost } from "next/font/google";
+import { Geist_Mono, Jost, Playfair_Display } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
 
@@ -9,9 +9,9 @@ const jost = Jost({
   display: "swap",
 });
 
-const dmSerifDisplay = DM_Serif_Display({
-  variable: "--font-dm-serif-display",
-  weight: "400",
+const playfairDisplay = Playfair_Display({
+  variable: "--font-playfair-display",
+  weight: "700",
   subsets: ["latin"],
   display: "swap",
 });
@@ -36,7 +36,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${jost.variable} ${dmSerifDisplay.variable} ${geistMono.variable} antialiased`}
+        className={`${jost.variable} ${playfairDisplay.variable} ${geistMono.variable} antialiased`}
       >
         {children}
         <Toaster richColors />
