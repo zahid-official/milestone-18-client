@@ -8,35 +8,35 @@ import {
   FieldSet,
 } from "@/components/ui/field";
 import { Spinner } from "@/components/ui/spinner";
-import registerUser, {
-  type RegisterActionState,
-} from "@/services/auth/registerUser";
+import registerUser from "@/services/auth/registerUser";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useActionState, useEffect } from "react";
 import { toast } from "sonner";
 
 // RegisterForm Component
 const RegisterForm = () => {
   // useActionState hook
-  const [state, formAction, isPending] = useActionState<
-    RegisterActionState | null,
-    FormData
-  >(registerUser, null);
+  const [state, formAction, isPending] = useActionState(registerUser, null);
+  const router = useRouter();
 
   // Helper to fetch a field-specific error message
   const fieldError = (field: string) =>
     state?.errors?.find((error) => error.field === field)?.message;
 
-  // Toast on submit result
+  // Effect to handle success or error messages
   useEffect(() => {
     if (!state) return;
     if (state.success) {
-      toast.success(state.message || "Account created successfully.");
+      toast.success(state.message || "Account created and logged in.");
+      if (state.redirectPath) {
+        router.push(state.redirectPath as string);
+      }
     } else if (!state.errors?.length && state.message) {
       // Only toast API errors; skip local validation errors
       toast.error(state.message);
     }
-  }, [state]);
+  }, [state, router]);
 
   return (
     <div className="w-full max-w-lg mx-auto space-y-8">

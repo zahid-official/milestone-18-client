@@ -115,7 +115,7 @@ const loginUser = async (_currentState: any, formData: FormData) => {
     return {
       success: true,
       message: result?.message || "Logged in successfully.",
-      redirectPath: target || "/",
+      redirectPath: target || `${getDefaultDashboardRoute(loggedUserRole)}`,
     };
   } catch (error) {
     console.error("loginUser error", error);

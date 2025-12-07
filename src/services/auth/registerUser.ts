@@ -1,6 +1,7 @@
 "use server";
 import envVars from "@/config/envVars";
 import z from "zod";
+import loginUser from "./loginUser";
 
 // Zod schema (keep legacy error option style for zod v4)
 const registerZodSchema = z
@@ -68,19 +69,8 @@ const registerZodSchema = z
     path: ["confirmPassword"],
   });
 
-// Declare types
-type RegisterActionState = {
-  success: boolean;
-  message?: string;
-  errors?: Array<{ field?: string; message?: string }>;
-};
-type RegisterPayload = z.infer<typeof registerZodSchema>;
-
 // registerUser Function
-const registerUser = async (
-  _currentState: RegisterActionState | null,
-  formData: FormData
-): Promise<RegisterActionState> => {
+const registerUser = async (_currentState: any, formData: FormData) => {
   try {
     // Validate incoming form data
     const parsed = registerZodSchema.safeParse({
@@ -103,8 +93,7 @@ const registerUser = async (
     }
 
     // Remove confirmPassword before sending to backend
-    const { confirmPassword: _confirmPassword, ...registerData } =
-      parsed.data as RegisterPayload;
+    const { confirmPassword: _confirmPassword, ...registerData } = parsed.data;
     void _confirmPassword;
 
     // Call backend API
@@ -127,9 +116,18 @@ const registerUser = async (
       };
     }
 
+    // If registration is successful, login the user automatically
+    const loginResult = await loginUser(_currentState, formData);
+
+    // If auto-login fails, surface that
+    if (!loginResult.success) {
+      return loginResult;
+    }
+
+    // Auto-login succeeded, pass through redirect path and message
     return {
-      success: true,
-      message: result?.message || "Account created successfully.",
+      ...loginResult,
+      message: "Account created successfully and logged in.",
     };
   } catch (error) {
     console.error("registerUser error", error);
@@ -140,5 +138,4 @@ const registerUser = async (
   }
 };
 
-export type { RegisterActionState };
 export default registerUser;
