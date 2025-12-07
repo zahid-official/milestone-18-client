@@ -1,7 +1,4 @@
 "use client";
-import registerUser, {
-  type RegisterActionState,
-} from "@/components/services/auth/registerUser";
 import { Button } from "@/components/ui/button";
 import {
   Field,
@@ -11,6 +8,9 @@ import {
   FieldSet,
 } from "@/components/ui/field";
 import { Spinner } from "@/components/ui/spinner";
+import registerUser, {
+  type RegisterActionState,
+} from "@/services/auth/registerUser";
 import Link from "next/link";
 import { useActionState, useEffect } from "react";
 import { toast } from "sonner";

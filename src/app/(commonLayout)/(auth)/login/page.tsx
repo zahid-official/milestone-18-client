@@ -1,8 +1,14 @@
 import LoginForm from "@/components/modules/auth/LoginForm";
 import PageBanner from "@/components/shared/PageBanner";
 
+// Interface for IProps
+interface IProps {
+  searchParams?: Promise<{ redirect?: string }>;
+}
+
 // LoginPage Component
-const LoginPage = () => {
+const LoginPage = async ({ searchParams }: IProps) => {
+  const params = (await searchParams) || {};
   return (
     <div>
       <PageBanner
@@ -13,14 +19,14 @@ const LoginPage = () => {
       <div className="px-4 py-28 max-w-7xl mx-auto space-y-10">
         {/* Heading */}
         <div className="text-center max-w-xl mx-auto space-y-1">
-          <h2 className="text-4xl font-medium">Login</h2>
+          <h2 className="text-4xl font-semibold">Login</h2>
           <p className="text-muted-foreground">
             Please fill your email and password to login
           </p>
         </div>
 
         {/* Login form */}
-        <LoginForm />
+        <LoginForm redirect={params?.redirect} />
       </div>
     </div>
   );
