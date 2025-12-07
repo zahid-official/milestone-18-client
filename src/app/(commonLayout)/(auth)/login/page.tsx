@@ -1,8 +1,14 @@
 import LoginForm from "@/components/modules/auth/LoginForm";
 import PageBanner from "@/components/shared/PageBanner";
 
+// Interface for IProps
+interface IProps {
+  searchParams?: Promise<{ redirect?: string }>;
+}
+
 // LoginPage Component
-const LoginPage = () => {
+const LoginPage = async ({ searchParams }: IProps) => {
+  const params = (await searchParams) || {};
   return (
     <div>
       <PageBanner
@@ -20,7 +26,7 @@ const LoginPage = () => {
         </div>
 
         {/* Login form */}
-        <LoginForm />
+        <LoginForm redirect={params?.redirect} />
       </div>
     </div>
   );

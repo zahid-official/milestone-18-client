@@ -3,6 +3,9 @@ import envVars from "@/config/envVars";
 import { parse } from "cookie";
 import z from "zod";
 import { setCookies } from "./cookies";
+import { UserRole } from "@/types";
+import { jwt } from "@/import";
+import { getDefaultDashboardRoute, isValidRedirectRole } from "@/routes";
 
 // Schema for login validation
 const loginZodSchema = z.object({
@@ -20,19 +23,12 @@ const loginZodSchema = z.object({
     .trim(),
 });
 
-// Declare types
-type LoginActionState = {
-  success: boolean;
-  message?: string;
-  errors?: Array<{ field?: string; message?: string }>;
-};
-
 // loginUser Function
-const loginUser = async (
-  _currentState: LoginActionState | null,
-  formData: FormData
-): Promise<LoginActionState> => {
+const loginUser = async (_currentState: any, formData: FormData) => {
   try {
+    // Get redirect path from formData
+    const redirectTo = formData.get("redirect") || null;
+
     // Validate incoming form data
     const parsed = loginZodSchema.safeParse({
       email: formData.get("email"),
@@ -100,9 +96,26 @@ const loginUser = async (
     await setCookies("accessToken", accessTokenData.accessToken);
     await setCookies("refreshToken", refreshTokenData.refreshToken);
 
+    // Verify access token and get user role
+    const verifiedToken = jwt.verify(
+      accessTokenData.accessToken,
+      envVars.JWT.ACCESS_TOKEN_SECRET
+    );
+    if (typeof verifiedToken === "string") {
+      throw new Error("Invalid token provided, authorization denied");
+    }
+
+    // Redirect user based on role and redirectTo parameter
+    const loggedUserRole: UserRole = verifiedToken?.role;
+    const target =
+      redirectTo && isValidRedirectRole(redirectTo.toString(), loggedUserRole)
+        ? `${redirectTo}`
+        : `${getDefaultDashboardRoute(loggedUserRole)}`;
+
     return {
       success: true,
       message: result?.message || "Logged in successfully.",
+      redirectPath: target || "/",
     };
   } catch (error) {
     console.error("loginUser error", error);
@@ -113,5 +126,4 @@ const loginUser = async (
   }
 };
 
-export type { LoginActionState };
 export default loginUser;
