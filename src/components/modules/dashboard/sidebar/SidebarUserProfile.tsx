@@ -25,8 +25,8 @@ const user = {
     "https://www.uxpin.com/studio/wp-content/uploads/2021/03/The-Benefits-of-Dark-Mode-and-Why-You-Should-Also-Dim-the-Lights-in-Your-Product_.png",
 };
 
-// UserProfile Component
-const UserProfile = () => {
+// SidebarUserProfile Component
+const SidebarUserProfile = () => {
   const { isMobile } = useSidebar();
 
   return (
@@ -106,4 +106,4 @@ const UserProfile = () => {
   );
 };
 
-export default UserProfile;
+export default SidebarUserProfile;
