@@ -28,11 +28,11 @@ export const metadata: Metadata = {
     "A modern furniture store showcasing contemporary designs and styles.",
 };
 
-export default function RootLayout({
+const RootLayout = ({
   children,
 }: Readonly<{
   children: React.ReactNode;
-}>) {
+}>) => {
   return (
     <html lang="en">
       <body
@@ -43,4 +43,6 @@ export default function RootLayout({
       </body>
     </html>
   );
-}
+};
+
+export default RootLayout;

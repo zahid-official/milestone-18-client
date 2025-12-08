@@ -6,55 +6,30 @@ import {
   SidebarHeader,
   SidebarRail,
 } from "@/components/ui/sidebar";
+import { UserInfo } from "@/types";
 import { NavGroup } from "@/types/sidebar.interface";
-import { BookOpen, GitGraph, Home } from "lucide-react";
-import * as React from "react";
 import SidebarNavigations from "./SidebarNavigations";
 import SidebarUserProfile from "./SidebarUserProfile";
 import TeamSwitcher from "./TeamSwitcher";
-import { userRole } from "@/constants/userRole";
 
-// This is sample data.
-const navGroups: NavGroup[] = [
-  {
-    groupLabel: "Documentation",
-    navItems: [
-      {
-        title: "Introduction",
-        url: "",
-        icon: BookOpen,
-        roles: ["ADMIN"],
-      },
-      {
-        title: "Description",
-        url: "",
-        icon: GitGraph,
-        roles: ["ADMIN"],
-      },
-    ],
-  },
-  {
-    groupLabel: "Public",
-    navItems: [
-      {
-        title: "Home",
-        url: "/",
-        icon: Home,
-        roles: [...Object.values(userRole)],
-      },
-    ],
-  },
-];
+// Interface for IProps
+interface IProps {
+  userInfo: UserInfo;
+  navGroups?: NavGroup[];
+  defaultDashboard?: string;
+}
 
 // SidebarContainer Component
 const SidebarContainer = ({
-  ...props
-}: React.ComponentProps<typeof Sidebar>) => {
+  userInfo,
+  navGroups,
+  defaultDashboard,
+}: IProps) => {
   return (
-    <Sidebar collapsible="icon" {...props}>
+    <Sidebar collapsible="icon">
       {/* Brand logo */}
       <SidebarHeader>
-        <TeamSwitcher />
+        <TeamSwitcher defaultDashboard={defaultDashboard} />
       </SidebarHeader>
 
       {/* Nav items */}
@@ -64,7 +39,7 @@ const SidebarContainer = ({
 
       {/* User info */}
       <SidebarFooter>
-        <SidebarUserProfile />
+        <SidebarUserProfile userInfo={userInfo} />
       </SidebarFooter>
 
       <SidebarRail />

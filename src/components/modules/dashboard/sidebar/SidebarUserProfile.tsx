@@ -16,17 +16,12 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
+import { UserInfo } from "@/types";
 import { ChevronsUpDown, Settings, User } from "lucide-react";
-
-const user = {
-  name: "shadcna",
-  email: "m@example.coma",
-  avatar:
-    "https://www.uxpin.com/studio/wp-content/uploads/2021/03/The-Benefits-of-Dark-Mode-and-Why-You-Should-Also-Dim-the-Lights-in-Your-Product_.png",
-};
+import Link from "next/link";
 
 // SidebarUserProfile Component
-const SidebarUserProfile = () => {
+const SidebarUserProfile = ({ userInfo }: { userInfo: UserInfo }) => {
   const { isMobile } = useSidebar();
 
   return (
@@ -36,21 +31,21 @@ const SidebarUserProfile = () => {
           <DropdownMenuTrigger asChild>
             <SidebarMenuButton
               size="lg"
-              className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+              className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground cursor-pointer"
             >
               <Avatar className="h-8 w-8 rounded-lg">
                 <AvatarImage
-                  src={user.avatar}
-                  alt={user.name}
+                  src={userInfo?.avatar}
+                  alt={userInfo?.name}
                   className="h-full w-full object-cover"
                 />
                 <AvatarFallback className="rounded-lg font-semibold">
-                  {user.name.substring(0, 2).toUpperCase()}
+                  {userInfo?.name.substring(0, 2).toUpperCase()}
                 </AvatarFallback>
               </Avatar>
               <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-medium">{user.name}</span>
-                <span className="truncate text-xs">{user.email}</span>
+                <span className="truncate font-medium">{userInfo?.name}</span>
+                <span className="truncate text-xs">{userInfo?.email}</span>
               </div>
               <ChevronsUpDown className="ml-auto size-4" />
             </SidebarMenuButton>
@@ -66,17 +61,17 @@ const SidebarUserProfile = () => {
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                 <Avatar className="h-8 w-8 rounded-lg">
                   <AvatarImage
-                    src={user.avatar}
-                    alt={user.name}
+                    src={userInfo?.avatar}
+                    alt={userInfo?.name}
                     className="h-full w-full object-cover"
                   />
                   <AvatarFallback className="rounded-lg font-semibold">
-                    {user.name.substring(0, 2).toUpperCase()}
+                    {userInfo?.name.substring(0, 2).toUpperCase()}
                   </AvatarFallback>
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-medium">{user.name}</span>
-                  <span className="truncate text-xs">{user.email}</span>
+                  <span className="truncate font-medium">{userInfo?.name}</span>
+                  <span className="truncate text-xs">{userInfo?.email}</span>
                 </div>
               </div>
             </DropdownMenuLabel>
@@ -84,14 +79,19 @@ const SidebarUserProfile = () => {
 
             {/* Dropdown items */}
             <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <User />
-                Profile
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <Settings />
-                Change Password
-              </DropdownMenuItem>
+              <Link href={"/profile"}>
+                <DropdownMenuItem className="cursor-pointer">
+                  <User />
+                  Profile
+                </DropdownMenuItem>
+              </Link>
+
+              <Link href={"/change-password"}>
+                <DropdownMenuItem className="cursor-pointer">
+                  <Settings />
+                  Change Password
+                </DropdownMenuItem>
+              </Link>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
 
