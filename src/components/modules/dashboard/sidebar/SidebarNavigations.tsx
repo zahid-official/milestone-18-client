@@ -7,7 +7,7 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import { NavGroup } from "@/types/sidebar.interface";
-import { Bell } from "lucide-react";
+import getIconComponent from "@/utils/getIconComponent";
 import Link from "next/link";
 
 // Interface for IProps
@@ -19,24 +19,27 @@ interface IProps {
 const SidebarNavigations = ({ navGroups }: IProps) => {
   return (
     <>
-      {navGroups?.map((group: NavGroup, idx: number) => (
-        <SidebarGroup key={idx}>
+      {navGroups?.map((group: NavGroup, index: number) => (
+        <SidebarGroup key={index}>
           <SidebarGroupLabel>{group?.groupLabel}</SidebarGroupLabel>
           <SidebarMenu>
-            {group?.navItems?.map((item, idx) => (
-              <SidebarMenuItem key={idx}>
-                <Link href={item?.url}>
-                  <SidebarMenuButton
-                    tooltip={item?.title}
-                    className="cursor-pointer"
-                  >
-                    {/* {item?.icon && <item.icon />} */}
-                    <Bell />
-                    <p>{item?.title}</p>
-                  </SidebarMenuButton>
-                </Link>
-              </SidebarMenuItem>
-            ))}
+            {group?.navItems?.map((item, idx) => {
+              const IconComponent = getIconComponent(item.icon);
+
+              return (
+                <SidebarMenuItem key={idx}>
+                  <Link href={item?.url}>
+                    <SidebarMenuButton
+                      tooltip={item?.title}
+                      className="cursor-pointer"
+                    >
+                      <IconComponent />
+                      <p>{item?.title}</p>
+                    </SidebarMenuButton>
+                  </Link>
+                </SidebarMenuItem>
+              );
+            })}
           </SidebarMenu>
         </SidebarGroup>
       ))}

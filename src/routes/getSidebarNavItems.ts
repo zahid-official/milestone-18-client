@@ -25,7 +25,7 @@ const getCommonNavItems = (role: UserRole): NavGroup[] => {
         {
           title: "Security",
           url: "/change-password",
-          icon: "Security",
+          icon: "Settings",
           roles: [...Object.values(userRole)],
         },
       ],

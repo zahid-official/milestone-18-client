@@ -5,6 +5,7 @@ import { UserInfo } from "@/types";
 import { JwtPayload } from "jsonwebtoken";
 import { getCookies } from "../services/auth/cookies";
 
+// getUserInfo Function
 const getUserInfo = async (): Promise<UserInfo | null> => {
   try {
     const accessToken = await getCookies("accessToken");
