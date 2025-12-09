@@ -49,7 +49,7 @@ const deleteMethod = async (
   endpoint: string,
   options: RequestInit = {}
 ): Promise<Response> => {
-  return serverFetchHelper(endpoint, { ...options, method: "Delete" });
+  return serverFetchHelper(endpoint, { ...options, method: "DELETE" });
 };
 
 // Export methods
