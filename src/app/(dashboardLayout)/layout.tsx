@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import DashboardSidebar from "@/components/modules/dashboard/DashboardSidebar";
 import { Separator } from "@/components/ui/separator";
 import {
