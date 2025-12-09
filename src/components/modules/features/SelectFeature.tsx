@@ -9,17 +9,15 @@ import {
 import { useRouter, useSearchParams } from "next/navigation";
 import { useTransition } from "react";
 
-interface SelectTableDataProps {
+// Interface for ISelect
+interface ISelect {
   paramName: string;
   placeholder?: string;
   options: { label: string; value: string }[];
 }
 
-const SelectTableData = ({
-  paramName,
-  placeholder,
-  options,
-}: SelectTableDataProps) => {
+// SelectFeature Component
+const SelectFeature = ({ paramName, placeholder, options }: ISelect) => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [isPending, startTransition] = useTransition();
@@ -72,4 +70,4 @@ const SelectTableData = ({
   );
 };
 
-export default SelectTableData;
+export default SelectFeature;

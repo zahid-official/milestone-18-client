@@ -5,16 +5,17 @@ import { Search } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState, useTransition } from "react";
 
-// Props for the search input
-interface SearchTableDataProps {
+// Interface for ISearch
+interface ISearch {
   placeholder?: string;
   paramName?: string;
 }
 
-const SearchTableData = ({
+// SearchFeature Component
+const SearchFeature = ({
   placeholder = "Search...",
   paramName = "searchTerm",
-}: SearchTableDataProps) => {
+}: ISearch) => {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const searchParams = useSearchParams();
@@ -61,4 +62,4 @@ const SearchTableData = ({
   );
 };
 
-export default SearchTableData;
+export default SearchFeature;
