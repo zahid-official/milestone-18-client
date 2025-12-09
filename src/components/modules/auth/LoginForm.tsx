@@ -33,8 +33,8 @@ const LoginForm = ({ redirect }: IProps) => {
   useEffect(() => {
     if (!state) return;
     if (state.success) {
-      toast.success(state.message);
       router.push(state?.redirectPath as string);
+      toast.success(state.message);
     } else if (!state.errors?.length && state.message) {
       toast.error(state.message);
     }
