@@ -26,14 +26,14 @@ const ManagementTableHeader = ({
   const Icon = action?.icon ?? Plus;
 
   return (
-    <div className="flex flex-wrap items-center justify-between gap-3 border-b pb-4">
-      {/* Copy block */}
-      <div className="space-y-1">
-        <h1 className="text-xl font-semibold leading-tight text-foreground">
+    <div className="flex flex-wrap items-center justify-between gap-3 pb-4">
+      {/* Heading */}
+      <div>
+        <h1 className="text-3xl font-bold leading-tight text-foreground">
           {title}
         </h1>
         {description && (
-          <p className="text-sm text-muted-foreground">{description}</p>
+          <p className="text-sm text-muted-foreground -mt-1">{description}</p>
         )}
       </div>
 
