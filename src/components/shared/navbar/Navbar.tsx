@@ -10,6 +10,8 @@ import {
 } from "../../ui/dropdown-menu";
 import { Separator } from "../../ui/separator";
 import Logo from "../Logo";
+import { getCookies } from "@/services/auth/cookies";
+import LogoutButton from "@/components/modules/auth/LogoutButton";
 
 const Navbar = async () => {
   // Navigation links
@@ -19,6 +21,9 @@ const Navbar = async () => {
     { label: "About Us", href: "/about-us" },
     { label: "Contact", href: "/contact" },
   ];
+
+  // Get AccessToken
+  const accessToken = await getCookies("accessToken");
 
   return (
     <nav>
@@ -43,15 +48,19 @@ const Navbar = async () => {
             className="h-6! mx-2 max-md:hidden"
           />
 
-          {/* Login & Logout Button */}
+          {/* Cart & Buttons */}
           <div className="flex md:gap-3.5">
             <div className="border p-2 rounded-full cursor-pointer">
               <ShoppingCart size={21} />
             </div>
 
-            <Link href={"/login"}>
-              <Button className="max-md:hidden px-6 text-base">Login</Button>
-            </Link>
+            {accessToken ? (
+              <LogoutButton />
+            ) : (
+              <Link href={"/login"}>
+                <Button className="max-md:hidden px-6 text-base">Login</Button>
+              </Link>
+            )}
           </div>
 
           {/* Mobile Menu Button */}
@@ -73,11 +82,15 @@ const Navbar = async () => {
                 ))}
 
                 <DropdownMenuSeparator className="mt-2.5" />
-                {/* Login & Logout Button */}
+                {/* Buttons */}
                 <DropdownMenuItem asChild className="bg-transparent! p-0">
-                  <Link href={"/login"}>
-                    <Button className="w-full mt-1.5">Login</Button>
-                  </Link>
+                  {accessToken ? (
+                    <LogoutButton />
+                  ) : (
+                    <Link href={"/login"}>
+                      <Button className="w-full mt-1.5">Login</Button>
+                    </Link>
+                  )}
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>

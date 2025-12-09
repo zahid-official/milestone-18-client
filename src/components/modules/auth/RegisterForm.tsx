@@ -28,10 +28,10 @@ const RegisterForm = () => {
   useEffect(() => {
     if (!state) return;
     if (state.success) {
-      toast.success(state.message || "Account created and logged in.");
       if (state.redirectPath) {
         router.push(state.redirectPath as string);
       }
+      toast.success(state.message || "Account created and logged in.");
     } else if (!state.errors?.length && state.message) {
       // Only toast API errors; skip local validation errors
       toast.error(state.message);
