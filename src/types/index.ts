@@ -14,3 +14,15 @@ export type RouteConfig = {
   exactRoutes: string[];
   patternRoutes: RegExp[];
 };
+
+// Standard shape for server action responses
+export type ActionState<TData = Record<string, unknown>> = {
+  success: boolean;
+  message?: string;
+  redirectPath?: string;
+  data?: TData;
+  errors?: {
+    field: string;
+    message: string;
+  }[];
+};

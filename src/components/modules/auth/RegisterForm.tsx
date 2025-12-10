@@ -8,35 +8,21 @@ import {
   FieldSet,
 } from "@/components/ui/field";
 import { Spinner } from "@/components/ui/spinner";
+import useHandleActionState from "@/hooks/useHandleActionState";
 import registerUser from "@/services/auth/registerUser";
+import getFieldError from "@/utils/getFieldError";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useActionState, useEffect } from "react";
-import { toast } from "sonner";
+import { useActionState } from "react";
 
 // RegisterForm Component
 const RegisterForm = () => {
   // useActionState hook
   const [state, formAction, isPending] = useActionState(registerUser, null);
-  const router = useRouter();
 
-  // Helper to fetch a field-specific error message
-  const fieldError = (field: string) =>
-    state?.errors?.find((error) => error.field === field)?.message;
-
-  // Effect to handle success or error messages
-  useEffect(() => {
-    if (!state) return;
-    if (state.success) {
-      if (state.redirectPath) {
-        router.push(state.redirectPath as string);
-      }
-      toast.success(state.message || "Account created and logged in.");
-    } else if (!state.errors?.length && state.message) {
-      // Only toast API errors; skip local validation errors
-      toast.error(state.message);
-    }
-  }, [state, router]);
+  // Handle action state side effects
+  useHandleActionState(state, {
+    successMessage: "Account created and logged in.",
+  });
 
   return (
     <div className="w-full max-w-lg mx-auto space-y-8">
@@ -55,7 +41,7 @@ const RegisterForm = () => {
                 placeholder="Enter your full name"
                 className="h-11 w-full rounded-none border border-foreground/60 px-3 text-sm text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
               />
-              <FieldError>{fieldError("name")}</FieldError>
+              <FieldError>{getFieldError(state, "name")}</FieldError>
             </FieldContent>
           </Field>
 
@@ -71,7 +57,7 @@ const RegisterForm = () => {
                 placeholder="Type Your Email"
                 className="h-11 w-full rounded-none border border-foreground/60 px-3 text-sm text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
               />
-              <FieldError>{fieldError("email")}</FieldError>
+              <FieldError>{getFieldError(state, "email")}</FieldError>
             </FieldContent>
           </Field>
 
@@ -87,7 +73,7 @@ const RegisterForm = () => {
                 placeholder="Create a password"
                 className="h-11 w-full rounded-none border border-foreground/60 px-3 text-sm text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
               />
-              <FieldError>{fieldError("password")}</FieldError>
+              <FieldError>{getFieldError(state, "password")}</FieldError>
             </FieldContent>
           </Field>
 
@@ -103,7 +89,7 @@ const RegisterForm = () => {
                 placeholder="Re-enter your password"
                 className="h-11 w-full rounded-none border border-foreground/60 px-3 text-sm text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
               />
-              <FieldError>{fieldError("confirmPassword")}</FieldError>
+              <FieldError>{getFieldError(state, "confirmPassword")}</FieldError>
             </FieldContent>
           </Field>
 

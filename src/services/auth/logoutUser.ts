@@ -1,12 +1,11 @@
 "use server";
-import envVars from "@/config/envVars";
+import serverFetchApi from "@/utils/serverFetchApi";
 import { deleteCookies } from "./cookies";
 
 // logoutUser Function
 const logoutUser = async () => {
   try {
-    const res = await fetch(`${envVars.BACKEND_URL}/auth/logout`, {
-      method: "POST",
+    const res = await serverFetchApi.post("/auth/logout", {
       cache: "no-store",
     });
     const result = await res.json();

@@ -1,4 +1,5 @@
 import envVars from "@/config/envVars";
+import { getCookies } from "@/services/auth/cookies";
 
 // serverFetchHelper Function
 const serverFetchHelper = async (
@@ -6,9 +7,12 @@ const serverFetchHelper = async (
   options: RequestInit = {}
 ): Promise<Response> => {
   const { headers, ...restOptions } = options;
+  const accessToken = await getCookies("accessToken");
+  
   const res = await fetch(`${envVars.BACKEND_URL}${endpoint}`, {
     headers: {
       ...headers,
+      Cookie: accessToken ? `accessToken=${accessToken}` : "",
     },
     ...restOptions,
   });
