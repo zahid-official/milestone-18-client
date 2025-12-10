@@ -28,8 +28,10 @@ const RegisterForm = () => {
   useEffect(() => {
     if (!state) return;
     if (state.success) {
-      if (state.redirectPath) {
-        router.push(state.redirectPath as string);
+      if (state?.redirectPath) {
+        const target = state.redirectPath as string;
+        router.prefetch(target);
+        router.replace(target);
       }
       toast.success(state.message || "Account created and logged in.");
     } else if (!state.errors?.length && state.message) {

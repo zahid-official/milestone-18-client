@@ -8,6 +8,7 @@ const serverFetchHelper = async (
 ): Promise<Response> => {
   const { headers, ...restOptions } = options;
   const accessToken = await getCookies("accessToken");
+  
   const res = await fetch(`${envVars.BACKEND_URL}${endpoint}`, {
     headers: {
       ...headers,

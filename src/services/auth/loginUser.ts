@@ -1,27 +1,12 @@
 "use server";
 import envVars from "@/config/envVars";
-import { parse } from "cookie";
-import z from "zod";
-import { setCookies } from "./cookies";
-import { UserRole } from "@/types";
 import { jwt } from "@/import";
 import { getDefaultDashboardRoute, isValidRedirectRole } from "@/routes";
-
-// Schema for login validation
-const loginZodSchema = z.object({
-  // Email
-  email: z
-    .email({ error: "Invalid email format." })
-    .min(5, { error: "Email must be at least 5 characters long." })
-    .max(100, { error: "Email cannot exceed 100 characters." })
-    .trim(),
-
-  // Password
-  password: z
-    .string({ error: "Password is required." })
-    .min(8, { error: "Password must be at least 8 characters long." })
-    .trim(),
-});
+import { UserRole } from "@/types";
+import serverFetchApi from "@/utils/serverFetchApi";
+import { loginZodSchema } from "@/zod/auth.validation";
+import { parse } from "cookie";
+import { setCookies } from "./cookies";
 
 // loginUser Function
 const loginUser = async (_currentState: any, formData: FormData) => {
@@ -48,11 +33,8 @@ const loginUser = async (_currentState: any, formData: FormData) => {
     }
 
     // Call backend API
-    const res = await fetch(`${envVars.BACKEND_URL}/auth/login`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
+    const res = await serverFetchApi.post("/auth/login", {
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify(parsed.data),
     });
     const result = await res.json();
