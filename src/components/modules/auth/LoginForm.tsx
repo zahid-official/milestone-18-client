@@ -9,11 +9,12 @@ import {
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Spinner } from "@/components/ui/spinner";
+import useHandleActionState from "@/hooks/useHandleActionState";
+
 import loginUser from "@/services/auth/loginUser";
+import getFieldError from "@/utils/getFieldError";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useActionState, useEffect } from "react";
-import { toast } from "sonner";
+import { useActionState } from "react";
 
 // Interface for IProps
 interface IProps {
@@ -23,24 +24,9 @@ interface IProps {
 // LoginForm Component
 const LoginForm = ({ redirect }: IProps) => {
   const [state, formAction, isPending] = useActionState(loginUser, null);
-  const router = useRouter();
 
-  // Helper to get field error message
-  const fieldError = (field: string) =>
-    state?.errors?.find((error) => error.field === field)?.message;
-
-  // Effect to handle success or error messages
-  useEffect(() => {
-    if (!state) return;
-    if (state.success) {
-      const target = (state?.redirectPath as string) || "/";
-      router.prefetch(target);
-      router.replace(target);
-      toast.success(state.message);
-    } else if (!state.errors?.length && state.message) {
-      toast.error(state.message);
-    }
-  }, [state, router]);
+  // Handle action state side effects
+  useHandleActionState(state);
 
   return (
     <div className="w-full max-w-lg mx-auto space-y-8">
@@ -62,7 +48,7 @@ const LoginForm = ({ redirect }: IProps) => {
                 placeholder="Type Your Email"
                 className="h-11 w-full rounded-none border border-foreground/60 px-3 text-sm text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
               />
-              <FieldError>{fieldError("email")}</FieldError>
+              <FieldError>{getFieldError(state, "email")}</FieldError>
             </FieldContent>
           </Field>
 
@@ -79,7 +65,7 @@ const LoginForm = ({ redirect }: IProps) => {
                 placeholder="Enter Your Password"
                 className="h-11 w-full rounded-none border border-foreground/60 px-3 text-sm text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
               />
-              <FieldError>{fieldError("password")}</FieldError>
+              <FieldError>{getFieldError(state, "password")}</FieldError>
             </FieldContent>
           </Field>
 
