@@ -92,7 +92,8 @@ const createProduct = async (
 
     // Attach thumbnail/file only when provided
     const file = formData.get("file");
-    if (file && typeof file !== "string") {
+    // Some browsers submit an empty File when no file is chosen; skip those to avoid "Empty file" errors from backend
+    if (file instanceof File && file.size > 0) {
       backendFormData.append("file", file);
     }
 

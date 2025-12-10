@@ -83,19 +83,21 @@ const productColumns: IColumn<IProduct>[] = [
           />
         </div>
       ) : (
-        <div className="flex h-10 w-10 items-center justify-center rounded-md bg-muted text-[10px] uppercase tracking-wide text-muted-foreground">
-          No image
+        <div className="flex h-10 w-10 items-center justify-center rounded-md bg-muted px-1 text-[8px] uppercase tracking-wide text-muted-foreground text-center leading-tight whitespace-normal wrap-break-word">
+          NO IMAGE
         </div>
       ),
-    className: "w-[88px]",
+    className: "w-[90px]",
   },
   {
     header: "Title",
     accessor: "title",
+    className: "min-w-[80px]",
   },
   {
     header: "Category",
     accessor: "category",
+    className: "min-w-[80px]",
   },
   {
     header: "Description",
