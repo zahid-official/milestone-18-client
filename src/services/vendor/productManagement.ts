@@ -1,7 +1,7 @@
 "use server";
 
 import serverFetchApi from "@/utils/serverFetchApi";
-import { createProductSchema } from "@/zod/product.validation";
+import { createProductSchema } from "@/schemas/product.validation";
 
 // Create Product
 const createProduct = async (_currentState: any, formData: FormData) => {

@@ -2,9 +2,9 @@
 import envVars from "@/config/envVars";
 import { jwt } from "@/import";
 import { getDefaultDashboardRoute, isValidRedirectRole } from "@/routes";
+import { loginZodSchema } from "@/schemas/auth.validation";
 import { UserRole } from "@/types";
 import serverFetchApi from "@/utils/serverFetchApi";
-import { loginZodSchema } from "@/zod/auth.validation";
 import { parse } from "cookie";
 import { setCookies } from "./cookies";
 

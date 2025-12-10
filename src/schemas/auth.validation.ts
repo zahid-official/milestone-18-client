@@ -82,5 +82,5 @@ const registerZodSchema = z
     path: ["confirmPassword"],
   });
 
-// Exprot schemas
+// Export schemas
 export { loginZodSchema, registerZodSchema };

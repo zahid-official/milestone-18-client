@@ -34,8 +34,10 @@ const LogoutButton = ({
       const res = await logoutUser();
 
       if (res.success) {
+        const target = "/login";
+        router.prefetch(target);
+        router.replace(target);
         toast.success(res.message);
-        router.push("/login");
       } else {
         toast.error(res.message);
       }

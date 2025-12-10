@@ -1,6 +1,6 @@
 "use server";
+import { registerZodSchema } from "@/schemas/auth.validation";
 import serverFetchApi from "@/utils/serverFetchApi";
-import { registerZodSchema } from "@/zod/auth.validation";
 import loginUser from "./loginUser";
 
 // registerUser Function
