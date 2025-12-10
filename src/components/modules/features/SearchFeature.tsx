@@ -5,16 +5,17 @@ import { Search } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState, useTransition } from "react";
 
-// Props for the search input
-interface SearchTableDataProps {
+// Interface for ISearch
+interface ISearch {
   placeholder?: string;
   paramName?: string;
 }
 
-const SearchTableData = ({
+// SearchFeature Component
+const SearchFeature = ({
   placeholder = "Search...",
   paramName = "searchTerm",
-}: SearchTableDataProps) => {
+}: ISearch) => {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const searchParams = useSearchParams();
@@ -46,12 +47,12 @@ const SearchTableData = ({
   }, [debouncedValue, paramName, router, searchParams]);
 
   return (
-    <div className="relative w-full max-w-sm">
-      <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+    <div className="relative w-full max-w-72">
+      <Search className="absolute left-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
       <Input
         type="search"
         placeholder={placeholder}
-        className="pl-10"
+        className="pl-8"
         value={value}
         onChange={(event) => setValue(event.target.value)}
         disabled={isPending}
@@ -61,4 +62,4 @@ const SearchTableData = ({
   );
 };
 
-export default SearchTableData;
+export default SearchFeature;
