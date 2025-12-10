@@ -12,8 +12,8 @@ interface IRefreshButtonProps {
   className?: string;
 }
 
-// TableRefreshButton Component
-const TableRefreshButton = ({
+// ManagementRefreshButton Component
+const ManagementRefreshButton = ({
   size = "default",
   variant = "default",
   className,
@@ -52,4 +52,4 @@ const TableRefreshButton = ({
   );
 };
 
-export default TableRefreshButton;
+export default ManagementRefreshButton;

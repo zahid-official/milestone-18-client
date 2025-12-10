@@ -1,14 +1,14 @@
 import { Skeleton } from "@/components/ui/skeleton";
 
-interface TableHeaderSkeletonProps {
+interface ManagementHeaderSkeletonProps {
   showAction?: boolean;
   extraFeatures?: number;
 }
 
-const TableHeaderSkeleton = ({
+const ManagementHeaderSkeleton = ({
   showAction = true,
   extraFeatures = 0,
-}: TableHeaderSkeletonProps) => {
+}: ManagementHeaderSkeletonProps) => {
   const controls = Array.from({ length: Math.max(extraFeatures, 0) });
 
   return (
@@ -32,4 +32,4 @@ const TableHeaderSkeleton = ({
   );
 };
 
-export default TableHeaderSkeleton;
+export default ManagementHeaderSkeleton;

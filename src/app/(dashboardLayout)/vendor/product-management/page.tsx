@@ -1,8 +1,12 @@
+import ManagementRefreshButton from "@/components/modules/dashboard/managementPage/ManagementRefreshButton";
+import ProductManagementHeader from "@/components/modules/vendor/product/ProductManagementHeader";
+
 // page Component
 const page = () => {
   return (
     <div>
-      <h1>Welcome to the page Component</h1>
+      <ProductManagementHeader />
+      <ManagementRefreshButton />
     </div>
   );
 };

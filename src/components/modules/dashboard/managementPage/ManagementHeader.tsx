@@ -5,7 +5,7 @@ import { Plus, type LucideIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 // Interface for table header
-export interface IManagementTableHeader {
+export interface IManagementHeader {
   title: string;
   description?: string;
   action?: {
@@ -17,12 +17,12 @@ export interface IManagementTableHeader {
 }
 
 // TableHeader Component
-const ManagementTableHeader = ({
+const ManagementHeader = ({
   title,
   description,
   action,
   children,
-}: IManagementTableHeader) => {
+}: IManagementHeader) => {
   const Icon = action?.icon ?? Plus;
 
   return (
@@ -54,4 +54,4 @@ const ManagementTableHeader = ({
   );
 };
 
-export default ManagementTableHeader;
+export default ManagementHeader;

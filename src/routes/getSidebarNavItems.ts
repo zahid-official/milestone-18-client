@@ -7,10 +7,10 @@ import { getDefaultDashboardRoute } from ".";
 const adminNavItems: NavGroup[] = [];
 const vendorNavItems: NavGroup[] = [
   {
-    groupLabel: "Product Management",
+    groupLabel: "Vendor Section",
     navItems: [
       {
-        title: "Products",
+        title: "Product Management",
         url: "/vendor/product-management",
         icon: "Sofa",
         roles: [...Object.values(userRole)],
