@@ -1,7 +1,7 @@
 "use server";
-
-import serverFetchApi from "@/utils/serverFetchApi";
 import { createProductSchema } from "@/schemas/product.validation";
+import serverFetchApi from "@/utils/serverFetchApi";
+import zodValidator from "@/utils/zodValidator";
 
 // Create Product
 const createProduct = async (_currentState: any, formData: FormData) => {
@@ -10,7 +10,7 @@ const createProduct = async (_currentState: any, formData: FormData) => {
     const parseNumber = (value: FormDataEntryValue | null) => {
       if (typeof value === "string" && value.trim() !== "") {
         const parsed = Number(value);
-        return Number.isNaN(parsed) ? NaN : parsed;
+        return Number.isNaN(parsed) ? undefined : parsed;
       }
       return undefined;
     };
@@ -23,7 +23,7 @@ const createProduct = async (_currentState: any, formData: FormData) => {
       width: parseNumber(formData.get("width")),
       length: parseNumber(formData.get("length")),
       materials:
-        typeof materials === "string" && materials.trim().length
+        typeof materials === "string" && materials.trim().length > 0
           ? materials.trim()
           : undefined,
     };
@@ -44,22 +44,13 @@ const createProduct = async (_currentState: any, formData: FormData) => {
     };
 
     // Validate payload against product schema before sending to backend
-    const parsed = createProductSchema.safeParse(productPayload);
-
-    // Surface validation errors back to the UI
-    if (!parsed.success) {
-      return {
-        success: false,
-        errors: parsed.error.issues.map((issue) => ({
-          field: issue.path[issue.path.length - 1]?.toString(),
-          message: issue.message,
-        })),
-        message: "Please fix the highlighted errors.",
-      };
+    const validatedPayload = zodValidator(createProductSchema, productPayload);
+    if (!validatedPayload.success) {
+      return validatedPayload;
     }
 
     // Use validated data to build multipart payload for backend (JSON + file)
-    const validatedData = parsed.data;
+    const validatedData = validatedPayload?.data ?? {};
     const backendFormData = new FormData();
     backendFormData.append("data", JSON.stringify(validatedData));
 
