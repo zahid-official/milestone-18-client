@@ -1,8 +1,40 @@
 "use server";
+import { IProduct } from "@/types/product.interface";
 import { createProductSchema } from "@/schemas/product.validation";
 import serverFetchApi from "@/utils/serverFetchApi";
 import zodValidator from "@/utils/zodValidator";
 import { ActionState } from "@/types";
+
+// Get Products
+const getProducts = async (): Promise<{
+  success: boolean;
+  data: IProduct[];
+  message?: string;
+}> => {
+  try {
+    const res = await serverFetchApi.get("/product");
+    const result = await res.json();
+
+    if (!result?.success) {
+      let message = "Failed to load products. Please try again.";
+      message = result?.message ?? result?.error ?? message;
+      return { success: false, data: [], message };
+    }
+
+    return {
+      success: true,
+      data: Array.isArray(result?.data) ? result.data : [],
+      message: result?.message,
+    };
+  } catch (error) {
+    console.error("getProducts error", error);
+    return {
+      success: false,
+      data: [],
+      message: "Something went wrong. Please try again.",
+    };
+  }
+};
 
 // Create Product
 const createProduct = async (
@@ -94,4 +126,39 @@ const createProduct = async (
   }
 };
 
-export { createProduct };
+// Delete Product
+const deleteProduct = async (productId: string): Promise<ActionState> => {
+  try {
+    if (!productId) {
+      return {
+        success: false,
+        message: "Product id is missing.",
+      };
+    }
+
+    const res = await serverFetchApi.delete(`/product/${productId}`);
+    const result = await res.json();
+
+    if (!result?.success) {
+      let message = "Failed to delete product. Please try again.";
+      message = result?.message ?? result?.error ?? message;
+      return {
+        success: false,
+        message,
+      };
+    }
+
+    return {
+      success: true,
+      message: result?.message || "Product deleted successfully.",
+    };
+  } catch (error) {
+    console.error("deleteProduct error", error);
+    return {
+      success: false,
+      message: "Something went wrong. Please try again.",
+    };
+  }
+};
+
+export { getProducts, createProduct, deleteProduct };

@@ -8,6 +8,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import { Spinner } from "@/components/ui/spinner";
 
 // Interface for IConfirmDelete
 interface IConfirmDelete {
@@ -18,6 +19,8 @@ interface IConfirmDelete {
   description?: string;
   itemName?: string;
   isDeleting?: boolean;
+  confirmLabel?: string;
+  cancelLabel?: string;
 }
 
 // ConfirmDeleteDialog Component
@@ -29,6 +32,8 @@ const ConfirmDeleteDialog = ({
   description,
   itemName = "this item",
   isDeleting = false,
+  confirmLabel = "Delete",
+  cancelLabel = "Cancel",
 }: IConfirmDelete) => {
   // Fallback description when no custom text is provided
   const fallbackDescription = (
@@ -54,11 +59,20 @@ const ConfirmDeleteDialog = ({
 
         <AlertDialogFooter>
           {/* Cancel */}
-          <AlertDialogCancel disabled={isDeleting}>Cancel</AlertDialogCancel>
+          <AlertDialogCancel disabled={isDeleting}>
+            {cancelLabel}
+          </AlertDialogCancel>
 
           {/* Delete action */}
           <AlertDialogAction onClick={onConfirm} disabled={isDeleting}>
-            {isDeleting ? "Deleting..." : "Delete"}
+            {isDeleting ? (
+              <>
+                <Spinner className="mr-2 size-4" />
+                Deleting...
+              </>
+            ) : (
+              confirmLabel
+            )}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

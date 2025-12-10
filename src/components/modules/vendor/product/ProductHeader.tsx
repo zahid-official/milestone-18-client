@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import ProductFormDialog from "./ProductFormDialog";
 
-const ProductManagementHeader = () => {
+const ProductHeader = () => {
   const router = useRouter();
   const [, startTransition] = useTransition();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -38,4 +38,4 @@ const ProductManagementHeader = () => {
   );
 };
 
-export default ProductManagementHeader;
+export default ProductHeader;
