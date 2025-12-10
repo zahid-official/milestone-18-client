@@ -5,7 +5,19 @@ import { getDefaultDashboardRoute } from ".";
 
 // Role based navitems
 const adminNavItems: NavGroup[] = [];
-const vendorNavItems: NavGroup[] = [];
+const vendorNavItems: NavGroup[] = [
+  {
+    groupLabel: "Product Management",
+    navItems: [
+      {
+        title: "Products",
+        url: "/vendor/product-management",
+        icon: "Sofa",
+        roles: [...Object.values(userRole)],
+      },
+    ],
+  },
+];
 const customerNavItems: NavGroup[] = [];
 
 // Get common navitems
@@ -56,13 +68,13 @@ const getNavItemsByRole = (role: UserRole): NavGroup[] => {
 
   switch (role) {
     case userRole.ADMIN:
-      return [...commonNavItems, ...adminNavItems];
+      return [...adminNavItems, ...commonNavItems];
 
     case userRole.VENDOR:
-      return [...commonNavItems, ...vendorNavItems];
+      return [...vendorNavItems, ...commonNavItems];
 
     case userRole.CUSTOMER:
-      return [...commonNavItems, ...customerNavItems];
+      return [...customerNavItems, ...commonNavItems];
 
     default:
       return [];

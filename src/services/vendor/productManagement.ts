@@ -94,9 +94,4 @@ const createProduct = async (
   }
 };
 
-// Export Product Management Service
-const productManagementService = {
-  createProduct,
-};
-
-export default productManagementService;
+export { createProduct };
