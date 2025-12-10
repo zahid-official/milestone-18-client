@@ -2,9 +2,13 @@
 import { createProductSchema } from "@/schemas/product.validation";
 import serverFetchApi from "@/utils/serverFetchApi";
 import zodValidator from "@/utils/zodValidator";
+import { ActionState } from "@/types";
 
 // Create Product
-const createProduct = async (_currentState: any, formData: FormData) => {
+const createProduct = async (
+  _currentState: unknown,
+  formData: FormData
+): Promise<ActionState> => {
   try {
     // Helper to safely parse numbers; empty values remain undefined so zod can flag required fields
     const parseNumber = (value: FormDataEntryValue | null) => {

@@ -2,32 +2,31 @@
 import { registerZodSchema } from "@/schemas/auth.validation";
 import serverFetchApi from "@/utils/serverFetchApi";
 import loginUser from "./loginUser";
+import { ActionState } from "@/types";
+import zodValidator from "@/utils/zodValidator";
 
 // registerUser Function
-const registerUser = async (_currentState: any, formData: FormData) => {
+const registerUser = async (
+  _currentState: unknown,
+  formData: FormData
+): Promise<ActionState> => {
   try {
     // Validate incoming form data
-    const parsed = registerZodSchema.safeParse({
+    const registerPayload = {
       name: formData.get("name"),
       email: formData.get("email"),
       password: formData.get("password"),
       confirmPassword: formData.get("confirmPassword"),
-    });
-
-    // Map zod issues to a simple array for UI consumption
-    if (!parsed.success) {
-      return {
-        success: false,
-        errors: parsed.error.issues.map((issue) => ({
-          field: issue.path[issue.path.length - 1]?.toString(),
-          message: issue.message,
-        })),
-        message: "Please fix the highlighted errors.",
-      };
+    };
+    const validatedPayload = zodValidator(registerZodSchema, registerPayload);
+    if (!validatedPayload.success) {
+      return validatedPayload;
     }
 
     // Remove confirmPassword before sending to backend
-    const { confirmPassword: _confirmPassword, ...registerData } = parsed.data;
+    const validatedData = validatedPayload.data!;
+    const { confirmPassword: _confirmPassword, ...registerData } =
+      validatedData;
     void _confirmPassword;
 
     // Call backend API

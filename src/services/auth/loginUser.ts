@@ -3,39 +3,36 @@ import envVars from "@/config/envVars";
 import { jwt } from "@/import";
 import { getDefaultDashboardRoute, isValidRedirectRole } from "@/routes";
 import { loginZodSchema } from "@/schemas/auth.validation";
-import { UserRole } from "@/types";
+import { ActionState, UserRole } from "@/types";
 import serverFetchApi from "@/utils/serverFetchApi";
 import { parse } from "cookie";
 import { setCookies } from "./cookies";
+import zodValidator from "@/utils/zodValidator";
 
 // loginUser Function
-const loginUser = async (_currentState: any, formData: FormData) => {
+const loginUser = async (
+  _currentState: unknown,
+  formData: FormData
+): Promise<ActionState> => {
   try {
     // Get redirect path from formData
     const redirectTo = formData.get("redirect") || null;
 
     // Validate incoming form data
-    const parsed = loginZodSchema.safeParse({
+    const loginPayload = {
       email: formData.get("email"),
       password: formData.get("password"),
-    });
-
-    // Map zod issues to a simple array for UI consumption
-    if (!parsed.success) {
-      return {
-        success: false,
-        errors: parsed.error.issues.map((issue) => ({
-          field: issue.path[issue.path.length - 1]?.toString(),
-          message: issue.message,
-        })),
-        message: "Please fix the highlighted errors.",
-      };
+    };
+    const validatedPayload = zodValidator(loginZodSchema, loginPayload);
+    if (!validatedPayload.success) {
+      return validatedPayload;
     }
 
     // Call backend API
+    const validatedData = validatedPayload?.data ?? {};
     const res = await serverFetchApi.post("/auth/login", {
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(parsed.data),
+      body: JSON.stringify(validatedData),
     });
     const result = await res.json();
 
