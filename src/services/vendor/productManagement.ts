@@ -81,6 +81,21 @@ const createProduct = async (
     const file = formData.get("file");
     const validFile = file instanceof File && file.size > 0 ? file : null;
 
+    // Enforce 4.5MB upload limit to match Next/Vercel configuration
+    const MAX_FILE_BYTES = 4.5 * 1024 * 1024;
+    if (validFile && validFile.size > MAX_FILE_BYTES) {
+      return {
+        success: false,
+        errors: [
+          {
+            field: "file",
+            message: "Image must be 4.5MB or smaller.",
+          },
+        ],
+        message: "Image exceeds the 4.5MB upload limit.",
+      };
+    }
+
     // Validate product payload using Zod schema
     const validatedPayload = zodValidator(createProductSchema, productPayload);
 

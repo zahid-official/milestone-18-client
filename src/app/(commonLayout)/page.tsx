@@ -1,8 +1,10 @@
+import Banner from "@/components/modules/common/home/Banner";
+
 // HomePage Component
 const HomePage = () => {
   return (
     <div>
-      <h1 className="">Welcome to the HomePage Component</h1>
+      <Banner />
     </div>
   );
 };
