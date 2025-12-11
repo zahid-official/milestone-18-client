@@ -20,6 +20,7 @@ import { Input } from "@/components/ui/input";
 import { Spinner } from "@/components/ui/spinner";
 import useHandleActionState from "@/hooks/useHandleActionState";
 import { Materials } from "@/schemas/product.validation";
+import { productCategory } from "@/constants/productCategory";
 import { createProduct } from "@/services/vendor/productManagement";
 import getFieldError from "@/utils/getFieldError";
 import { useActionState, useEffect, useMemo } from "react";
@@ -48,12 +49,23 @@ const ProductFormDialog = ({
     onClose();
   }, [state, onClose, onSuccess]);
 
-  // Map enum values to human-friendly labels for the materials select
+  // Map enum values to human-friendly labels for the select fields
   const materialOptions = useMemo(
     () =>
       Object.values(Materials).map((material) => ({
         value: material,
         label: material.charAt(0) + material.slice(1).toLowerCase(),
+      })),
+    []
+  );
+  const categoryOptions = useMemo(
+    () =>
+      Object.values(productCategory).map((category) => ({
+        value: category,
+        label: category
+          .split("_")
+          .map((part) => part.charAt(0) + part.slice(1).toLowerCase())
+          .join(" "),
       })),
     []
   );
@@ -68,8 +80,8 @@ const ProductFormDialog = ({
         {/* Product create form */}
         <form action={formAction} className="space-y-5">
           <FieldSet>
-            {/* Basic product info in two-column layout */}
             <div className="grid gap-3 sm:grid-cols-2">
+              {/* Title and thumbnail side-by-side */}
               <Field>
                 <FieldLabel htmlFor="title">
                   Title{" "}
@@ -89,20 +101,21 @@ const ProductFormDialog = ({
               </Field>
 
               <Field>
-                <FieldLabel htmlFor="category">
-                  Category{" "}
+                <FieldLabel htmlFor="file">
+                  Upload Thumbnail{" "}
                   <span className="text-destructive" aria-hidden="true">
                     *
                   </span>
                 </FieldLabel>
                 <FieldContent>
                   <Input
-                    id="category"
-                    name="category"
-                    placeholder="Living room furniture"
+                    id="file"
+                    name="file"
+                    type="file"
+                    accept="image/*"
                     disabled={isPending}
                   />
-                  <FieldError>{getFieldError(state, "category")}</FieldError>
+                  <FieldError>{getFieldError(state, "file")}</FieldError>
                 </FieldContent>
               </Field>
             </div>
@@ -152,57 +165,59 @@ const ProductFormDialog = ({
               </Field>
             </div>
 
-            {/* Upload Thumbnail */}
-            <Field>
-              <FieldLabel htmlFor="file">Upload Thumbnail</FieldLabel>
-              <FieldContent>
-                <Input
-                  id="file"
-                  name="file"
-                  type="file"
-                  accept="image/*"
-                  disabled={isPending}
-                />
-                <FieldError>{getFieldError(state, "file")}</FieldError>
-              </FieldContent>
-            </Field>
-
-            {/* Short description and product overview side-by-side */}
+            {/* Category and materials side-by-side */}
             <div className="grid gap-3 sm:grid-cols-2">
               <Field>
-                <FieldLabel htmlFor="description">Short Description</FieldLabel>
+                <FieldLabel htmlFor="category">
+                  Category{" "}
+                  <span className="text-destructive" aria-hidden="true">
+                    *
+                  </span>
+                </FieldLabel>
                 <FieldContent>
-                  <textarea
-                    id="description"
-                    name="description"
-                    placeholder="Summarize the product in a few sentences"
-                    className="min-h-24 w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm text-foreground shadow-xs outline-none transition-[color,box-shadow] placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
+                  <select
+                    id="category"
+                    name="category"
+                    className="h-9 w-full min-w-0 rounded-md border border-input bg-transparent px-3 text-sm text-foreground shadow-xs outline-none transition-[color,box-shadow] placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
+                    defaultValue=""
                     disabled={isPending}
-                  />
-                  <FieldError>{getFieldError(state, "description")}</FieldError>
+                  >
+                    <option value="" disabled>
+                      Select category
+                    </option>
+                    {categoryOptions.map((option) => (
+                      <option key={option.value} value={option.value}>
+                        {option.label}
+                      </option>
+                    ))}
+                  </select>
+                  <FieldError>{getFieldError(state, "category")}</FieldError>
                 </FieldContent>
               </Field>
 
               <Field>
-                <FieldLabel htmlFor="productOverview">
-                  Product Overview
-                </FieldLabel>
+                <FieldLabel htmlFor="materials">Materials</FieldLabel>
                 <FieldContent>
-                  <textarea
-                    id="productOverview"
-                    name="productOverview"
-                    placeholder="Add rich details, materials, and usage recommendations"
-                    className="min-h-24 w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm text-foreground shadow-xs outline-none transition-[color,box-shadow] placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
+                  <select
+                    id="materials"
+                    name="materials"
+                    className="h-9 w-full min-w-0 rounded-md border border-input bg-transparent px-3 text-sm text-foreground shadow-xs outline-none transition-[color,box-shadow] placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
+                    defaultValue=""
                     disabled={isPending}
-                  />
-                  <FieldError>
-                    {getFieldError(state, "productOverview")}
-                  </FieldError>
+                  >
+                    <option value="" disabled>
+                      Select material
+                    </option>
+                    {materialOptions.map((option) => (
+                      <option key={option.value} value={option.value}>
+                        {option.label}
+                      </option>
+                    ))}
+                  </select>
+                  <FieldError>{getFieldError(state, "materials")}</FieldError>
                 </FieldContent>
               </Field>
             </div>
-
-            <FieldSeparator>Specifications (optional)</FieldSeparator>
 
             {/* Specs grid */}
             <div className="grid gap-3 sm:grid-cols-2">
@@ -271,28 +286,45 @@ const ProductFormDialog = ({
               </Field>
             </div>
 
-            <Field>
-              <FieldLabel htmlFor="materials">Materials</FieldLabel>
-              <FieldContent>
-                <select
-                  id="materials"
-                  name="materials"
-                  className="h-9 w-full min-w-0 rounded-md border border-input bg-transparent px-3 text-sm text-foreground shadow-xs outline-none transition-[color,box-shadow] placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
-                  defaultValue=""
-                  disabled={isPending}
-                >
-                  <option value="" disabled>
-                    Select material
-                  </option>
-                  {materialOptions.map((option) => (
-                    <option key={option.value} value={option.value}>
-                      {option.label}
-                    </option>
-                  ))}
-                </select>
-                <FieldError>{getFieldError(state, "materials")}</FieldError>
-              </FieldContent>
-            </Field>
+            {/* Short description and product overview side-by-side */}
+            <div className="grid gap-3 sm:grid-cols-2">
+              <Field>
+                <FieldLabel htmlFor="description">
+                  Short Description{" "}
+                  <span className="text-destructive" aria-hidden="true">
+                    *
+                  </span>
+                </FieldLabel>
+                <FieldContent>
+                  <textarea
+                    id="description"
+                    name="description"
+                    placeholder="Summarize the product in a few sentences"
+                    className="min-h-24 w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm text-foreground shadow-xs outline-none transition-[color,box-shadow] placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
+                    disabled={isPending}
+                  />
+                  <FieldError>{getFieldError(state, "description")}</FieldError>
+                </FieldContent>
+              </Field>
+
+              <Field>
+                <FieldLabel htmlFor="productOverview">
+                  Product Overview
+                </FieldLabel>
+                <FieldContent>
+                  <textarea
+                    id="productOverview"
+                    name="productOverview"
+                    placeholder="Add rich details, materials, and usage recommendations"
+                    className="min-h-24 w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm text-foreground shadow-xs outline-none transition-[color,box-shadow] placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
+                    disabled={isPending}
+                  />
+                  <FieldError>
+                    {getFieldError(state, "productOverview")}
+                  </FieldError>
+                </FieldContent>
+              </Field>
+            </div>
           </FieldSet>
 
           {/* Buttons */}

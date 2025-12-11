@@ -67,9 +67,9 @@ const createProductSchema = z.object({
   // Description
   description: z
     .string({ error: "Description must be a string" })
+    .min(20, { error: "Description must be at least 20 characters long." })
     .max(500, { error: "Description cannot exceed 500 characters." })
-    .trim()
-    .optional(),
+    .trim(),
 
   // Product Overview
   productOverview: z
