@@ -1,8 +1,8 @@
 import feature from "@/assets/feature.png";
-import icon1 from "@/assets/icons/icon-1.svg";
-import icon2 from "@/assets/icons/icon-2.svg";
-import icon3 from "@/assets/icons/icon-3.svg";
-import icon4 from "@/assets/icons/icon-4.svg";
+import featureIcon1 from "@/assets/icons/featureIcon-1.svg";
+import featureIcon2 from "@/assets/icons/featureIcon-2.svg";
+import featureIcon3 from "@/assets/icons/featureIcon-3.svg";
+import featureIcon4 from "@/assets/icons/featureIcon-4.svg";
 import Image from "next/image";
 
 // Feature Component
@@ -11,22 +11,22 @@ const Feature = () => {
     {
       heading: "Free Shipping",
       text: "Buy product over $100 and get free home delivery offer",
-      url: icon1,
+      url: featureIcon1,
     },
     {
       heading: "Easy Return Policy",
       text: "Provide 30 day easy Return policy for all of our customer",
-      url: icon2,
+      url: featureIcon2,
     },
     {
       heading: "Secure Payment",
       text: "We conform you that payment system are totally secure",
-      url: icon3,
+      url: featureIcon3,
     },
     {
       heading: "Best Quality",
       text: "We never compromize about our quality and always concern",
-      url: icon4,
+      url: featureIcon4,
     },
   ];
 
