@@ -36,12 +36,14 @@ const Category = () => {
   ];
 
   return (
-    <section className="max-w-7xl mx-auto w-full px-4 lg:pb-36 pb-24 space-y-10">
+    <section className="max-w-7xl mx-auto w-full px-4 lg:pb-36 pb-24 sm:space-y-10 space-y-5">
       <div className="text-center space-y-2">
-        <h2 className="text-4xl font-semibold font-heading">
+        <h2 className="sm:text-4xl text-3xl font-semibold font-heading">
           Choose Your Category
         </h2>
-        <p className="text-foreground/60">Select your product from our category options</p>
+        <p className="text-foreground/60">
+          Select your product from our category options
+        </p>
       </div>
 
       <div className="flex justify-center flex-wrap items-center gap-10">

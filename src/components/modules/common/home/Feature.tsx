@@ -33,9 +33,9 @@ const Feature = () => {
   return (
     <section className="grid lg:grid-cols-2 items-center justify-center gap-16 lg:py-36 py-24 px-4 max-w-7xl mx-auto w-full">
       {/* Left column */}
-      <div className="lg:order-0 order-1 max-sm:flex flex-col justify-center space-y-10">
+      <div className="lg:order-0 order-1 max-sm:flex flex-col justify-center sm:space-y-10 space-y-5">
         <div className="max-lg:text-center max-w-lg max-lg:mx-auto">
-          <h1 className="text-4xl font-semibold font-heading">
+          <h1 className="sm:text-4xl text-3xl font-semibold font-heading">
             Why We are the Best?
           </h1>
           <p className="text-foreground/60 pt-2">
