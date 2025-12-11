@@ -1,5 +1,4 @@
 "use client";
-
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -13,14 +12,12 @@ import {
   FieldContent,
   FieldError,
   FieldLabel,
-  FieldSeparator,
   FieldSet,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Spinner } from "@/components/ui/spinner";
+import { productCategory, productMaterials } from "@/constants/productCategory";
 import useHandleActionState from "@/hooks/useHandleActionState";
-import { Materials } from "@/schemas/product.validation";
-import { productCategory } from "@/constants/productCategory";
 import { createProduct } from "@/services/vendor/productManagement";
 import getFieldError from "@/utils/getFieldError";
 import { useActionState, useEffect, useMemo } from "react";
@@ -52,7 +49,7 @@ const ProductFormDialog = ({
   // Map enum values to human-friendly labels for the select fields
   const materialOptions = useMemo(
     () =>
-      Object.values(Materials).map((material) => ({
+      Object.values(productMaterials).map((material) => ({
         value: material,
         label: material.charAt(0) + material.slice(1).toLowerCase(),
       })),

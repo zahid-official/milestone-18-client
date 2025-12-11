@@ -1,13 +1,22 @@
-import { Materials } from "@/schemas/product.validation";
+// Defines product materials
+export type ProductMaterials = "WOODEN" | "METAL" | "BAMBOO";
+
+export type ProductCategory =
+  | "CHAIR"
+  | "BED"
+  | "SOFA"
+  | "TABLE"
+  | "SIDE_DRAWER"
+  | "DINING_CHAIR";
 
 export interface IProductSpecifications {
   height?: number;
   weight?: number;
   width?: number;
   length?: number;
-  materials?: Materials;
+  materials?: ProductMaterials;
   // Backend currently returns `meterials` for materials; keep optional for compatibility
-  meterials?: Materials | string;
+  meterials?: ProductMaterials | string;
 }
 
 export interface IProduct {

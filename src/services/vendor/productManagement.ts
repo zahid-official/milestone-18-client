@@ -42,7 +42,7 @@ const createProduct = async (
   formData: FormData
 ): Promise<ActionState> => {
   try {
-    // Helper to safely parse numbers; empty values remain undefined so zod can flag required fields
+    // Helper to safely parse numbers from form data
     const parseNumber = (value: FormDataEntryValue | null) => {
       if (typeof value === "string" && value.trim() !== "") {
         const parsed = Number(value);
@@ -51,7 +51,7 @@ const createProduct = async (
       return undefined;
     };
 
-    // Build payload from incoming form data for validation
+    // Build product payload from form data
     const materials = formData.get("materials");
     const specifications = {
       height: parseNumber(formData.get("height")),
@@ -64,7 +64,7 @@ const createProduct = async (
           : undefined,
     };
 
-    // Remove specs block if user left all specification fields empty
+    // Check if at least one specification is provided
     const hasSpecifications = Object.values(specifications).some(
       (value) => value !== undefined
     );
@@ -78,26 +78,46 @@ const createProduct = async (
       productOverview: formData.get("productOverview"),
       specifications: hasSpecifications ? specifications : undefined,
     };
-
-    // Validate payload against product schema before sending to backend
-    const validatedPayload = zodValidator(createProductSchema, productPayload);
-    if (!validatedPayload.success) {
-      return validatedPayload;
-    }
-
-    // Use validated data to build multipart payload for backend (JSON + file)
-    const validatedData = validatedPayload?.data ?? {};
-    const backendFormData = new FormData();
-    backendFormData.append("data", JSON.stringify(validatedData));
-
-    // Attach thumbnail/file only when provided
     const file = formData.get("file");
-    // Some browsers submit an empty File when no file is chosen; skip those to avoid "Empty file" errors from backend
-    if (file instanceof File && file.size > 0) {
-      backendFormData.append("file", file);
+    const validFile = file instanceof File && file.size > 0 ? file : null;
+
+    // Validate product payload using Zod schema
+    const validatedPayload = zodValidator(createProductSchema, productPayload);
+
+    // Handle validation errors
+    if (!validatedPayload.success || !validFile) {
+      const errors = [
+        ...(validatedPayload.errors ?? []),
+        ...(validFile
+          ? []
+          : [{ field: "file", message: "Thumbnail is required." }]),
+      ];
+
+      return {
+        success: false,
+        errors,
+        message:
+          validatedPayload.message || "Please fix the highlighted errors.",
+      };
     }
 
-    // Call backend API with access token forwarded via cookie for backend middleware
+    // Prepare FormData for backend submission
+    const validatedData = validatedPayload.data!;
+    const backendPayload: Record<string, unknown> = { ...validatedData };
+    if (validatedData.specifications) {
+      const { materials: materialValue, ...restSpecs } =
+        validatedData.specifications;
+      backendPayload.specifications = {
+        ...restSpecs,
+        ...(materialValue ? { meterials: materialValue } : {}),
+      };
+    }
+
+    const backendFormData = new FormData();
+    backendFormData.append("data", JSON.stringify(backendPayload));
+    backendFormData.append("file", validFile);
+
+    // Send create product request to backend
     const res = await serverFetchApi.post("/product/create", {
       body: backendFormData,
     });
@@ -113,7 +133,7 @@ const createProduct = async (
       };
     }
 
-    // Return success result for UI handling
+    // Return success result
     return {
       success: true,
       message: result?.message || "Product created successfully.",

@@ -1,11 +1,5 @@
+import { productCategory, productMaterials } from "@/constants/productCategory";
 import { z } from "zod";
-
-// Defines product materials
-export enum Materials {
-  WOODEN = "WOODEN",
-  METAL = "METAL",
-  BAMBOO = "BAMBOO",
-}
 
 // Zod schema for product specifications
 const productSpecificationsSchema = z.object({
@@ -30,7 +24,9 @@ const productSpecificationsSchema = z.object({
     .optional(),
 
   materials: z
-    .enum(Object.values(Materials) as [string, ...string[]])
+    .enum(Object.values(productMaterials) as [string], {
+      error: "Materials must be a valid product material",
+    })
     .optional(),
 });
 
@@ -55,11 +51,9 @@ const createProductSchema = z.object({
     .nonnegative({ error: "Stock cannot be negative number." }),
 
   // Category
-  category: z
-    .string({ error: "Category is required" })
-    .min(2, { error: "Category must be at least 2 characters long." })
-    .max(50, { error: "Category cannot exceed 50 characters." })
-    .trim(),
+  category: z.enum(Object.values(productCategory) as [string], {
+    error: "Category is required",
+  }),
 
   // Thumbnail
   thumbnail: z.string({ error: "Thumbnail must be string" }).trim().optional(),
@@ -67,7 +61,7 @@ const createProductSchema = z.object({
   // Description
   description: z
     .string({ error: "Description must be a string" })
-    .min(20, { error: "Description must be at least 20 characters long." })
+    .min(8, { error: "Description must be at least 8 characters long." })
     .max(500, { error: "Description cannot exceed 500 characters." })
     .trim(),
 

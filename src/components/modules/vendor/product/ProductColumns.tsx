@@ -42,9 +42,21 @@ const renderDescription = (product: IProduct) => {
 
 // Render materials or fallback
 const renderMaterials = (product: IProduct) => {
-  const materials = product.specifications?.materials;
-  const typoMaterials = product.specifications?.meterials;
-  return materials || typoMaterials || "Not mentioned";
+  const materials =
+    product.specifications?.materials ?? product.specifications?.meterials;
+
+  // Show fallback only when no value is provided
+  if (materials === undefined || materials === null) {
+    return "Not mentioned";
+  }
+
+  if (Array.isArray(materials)) {
+    const list = materials.filter(Boolean).map(String).join(", ");
+    return list || "Not mentioned";
+  }
+
+  const text = String(materials).trim();
+  return text.length ? text : "Not mentioned";
 };
 
 // Render specs (dimensions/weight) or fallback

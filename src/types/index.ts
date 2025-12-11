@@ -1,12 +1,5 @@
 // Define user roles
 export type UserRole = "ADMIN" | "VENDOR" | "CUSTOMER";
-export type ProductCategory =
-  | "CHAIR"
-  | "BED"
-  | "SOFA"
-  | "TABLE"
-  | "SIDE_DRAWER"
-  | "DINING_CHAIR";
 
 // Define jwt token extract userInfo
 export type UserInfo = {
