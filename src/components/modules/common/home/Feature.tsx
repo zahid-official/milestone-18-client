@@ -1,0 +1,74 @@
+import feature from "@/assets/feature.png";
+import icon1 from "@/assets/icons/icon-1.svg";
+import icon2 from "@/assets/icons/icon-2.svg";
+import icon3 from "@/assets/icons/icon-3.svg";
+import icon4 from "@/assets/icons/icon-4.svg";
+import Image from "next/image";
+
+// Feature Component
+const Feature = () => {
+  const features = [
+    {
+      heading: "Free Shipping",
+      text: "Buy product over $100 and get free home delivery offer",
+      url: icon1,
+    },
+    {
+      heading: "Easy Return Policy",
+      text: "Provide 30 day easy Return policy for all of our customer",
+      url: icon2,
+    },
+    {
+      heading: "Secure Payment",
+      text: "We conform you that payment system are totally secure",
+      url: icon3,
+    },
+    {
+      heading: "Best Quality",
+      text: "We never compromize about our quality and always concern",
+      url: icon4,
+    },
+  ];
+
+  return (
+    <section className="grid lg:grid-cols-2 items-center justify-center gap-16 lg:py-36 py-24 px-4 max-w-7xl mx-auto w-full">
+      {/* Left column */}
+      <div className="lg:order-0 order-1 max-sm:flex flex-col justify-center space-y-10">
+        <div className="max-lg:text-center max-w-lg max-lg:mx-auto">
+          <h1 className="text-4xl font-semibold font-heading">
+            Why We are the Best?
+          </h1>
+          <p className="text-foreground/60 pt-2">
+            At Lorvic, we are committed to offering exceptional furniture that
+            blends modern design, top-tier comfort, and long-lasting durability.
+            Discover why we stand out from the rest:
+          </p>
+        </div>
+
+        <div className="grid sm:grid-cols-2 gap-8 justify-center items-center">
+          {features.map((feature, index) => (
+            <div
+              key={index}
+              className="flex max-sm:flex-col gap-3 items-center max-sm:text-center"
+            >
+              <Image src={feature.url} alt={feature.heading} />
+              <div>
+                <h2 className="text-xl font-medium text-foreground/95 font-heading">
+                  {feature.heading}
+                </h2>
+                <p className="text-foreground/60 pt-1">{feature.text}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Right column */}
+      <div className="flex justify-center items-center">
+        <Image src={feature} alt="feature image"></Image>
+      </div>
+    </section>
+  );
+};
+
+export default Feature;

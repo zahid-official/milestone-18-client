@@ -10,10 +10,9 @@ const Banner = () => {
       {/* overlay */}
       <div className="w-[57%] bg-lorvic absolute top-0 h-screen -z-50 max-lg:hidden"></div>
 
-      {/*  */}
-      <section className="grid lg:grid-cols-2 min-h-screen items-center justify-center gap-8 py-36 px-4 max-w-7xl mx-auto w-full">
+      <section className="grid lg:grid-cols-2 min-h-screen items-center justify-center gap-6 lg:py-36 pt-44 pb-4 px-4 max-w-7xl mx-auto w-full">
         {/* Left column */}
-        <div className="space-y-4 lg:order-0 order-1 max-sm:flex flex-col justify-center">
+        <div className="space-y-4 lg:order-0 order-1 max-sm:flex flex-col max-lg:text-center justify-center">
           <h2 className="text-sm font-medium ml-1">
             100% QUALITY - 100% SATISFACTION
           </h2>
@@ -31,7 +30,11 @@ const Banner = () => {
 
         {/* Right column */}
         <div className="flex justify-center items-center ">
-          <Image src={banner} alt="banner image" className="max-lg:hidden"></Image>
+          <Image
+            src={banner}
+            alt="banner image"
+            className="max-lg:hidden"
+          ></Image>
           <Image
             src={bannerLG}
             alt="banner image"
