@@ -1,8 +1,10 @@
+import ShopProduct from "@/components/modules/common/shop/ShopProduct";
+
 // ShopPage Component
 const ShopPage = () => {
   return (
     <div>
-      <h1>Welcome to the ShopPage Component</h1>
+      <ShopProduct/>
     </div>
   );
 };
