@@ -145,15 +145,21 @@ function ManagementTable<T>({
                       {/* Dropdown content */}
                       <DropdownMenuContent align="end">
                         {onView && (
-                          <DropdownMenuItem onClick={() => onView?.(row)}>
-                            <Eye className="mr-2 size-4" />
+                          <DropdownMenuItem
+                            onClick={() => onView?.(row)}
+                            className=" cursor-pointer"
+                          >
+                            <Eye className="size-4" />
                             View
                           </DropdownMenuItem>
                         )}
 
                         {onEdit && (
-                          <DropdownMenuItem onClick={() => onEdit?.(row)}>
-                            <Pencil className="mr-2 size-4" />
+                          <DropdownMenuItem
+                            onClick={() => onEdit?.(row)}
+                            className=" cursor-pointer"
+                          >
+                            <Pencil className="size-4" />
                             Edit
                           </DropdownMenuItem>
                         )}
@@ -161,9 +167,9 @@ function ManagementTable<T>({
                         {onDelete && (
                           <DropdownMenuItem
                             onClick={() => onDelete?.(row)}
-                            className="text-destructive focus:text-destructive"
+                            className="cursor-pointer"
                           >
-                            <Trash2 className="mr-2 size-4" />
+                            <Trash2 className="size-4 text-destructive focus:text-destructive" />
                             Delete
                           </DropdownMenuItem>
                         )}

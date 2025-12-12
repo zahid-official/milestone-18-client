@@ -8,17 +8,17 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-interface ITableSkeleton {
+interface IManagementTableSkeleton {
   columns?: number;
   rows?: number;
   showActions?: boolean;
 }
 
-const TableSkeleton = ({
+const ManagementTableSkeleton = ({
   columns = 6,
   rows = 10,
   showActions = true,
-}: ITableSkeleton) => {
+}: IManagementTableSkeleton) => {
   const columnPlaceholders = Array.from({ length: columns });
   const rowPlaceholders = Array.from({ length: rows });
 
@@ -68,4 +68,4 @@ const TableSkeleton = ({
   );
 };
 
-export default TableSkeleton;
+export default ManagementTableSkeleton;

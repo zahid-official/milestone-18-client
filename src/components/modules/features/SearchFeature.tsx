@@ -11,8 +11,8 @@ interface ISearch {
   paramName?: string;
 }
 
-// SearchFeature Component
-const SearchFeature = ({
+// SearchFilter Component
+const SearchFilter = ({
   placeholder = "Search...",
   paramName = "searchTerm",
 }: ISearch) => {
@@ -62,4 +62,4 @@ const SearchFeature = ({
   );
 };
 
-export default SearchFeature;
+export default SearchFilter;

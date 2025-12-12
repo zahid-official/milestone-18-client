@@ -16,8 +16,8 @@ interface ISelect {
   options: { label: string; value: string }[];
 }
 
-// SelectFeature Component
-const SelectFeature = ({ paramName, placeholder, options }: ISelect) => {
+// SelectFilter Component
+const SelectFilter = ({ paramName, placeholder, options }: ISelect) => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [isPending, startTransition] = useTransition();
@@ -70,4 +70,4 @@ const SelectFeature = ({ paramName, placeholder, options }: ISelect) => {
   );
 };
 
-export default SelectFeature;
+export default SelectFilter;
