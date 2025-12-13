@@ -19,11 +19,13 @@ const ProductHeader = () => {
 
   return (
     <>
-      <ProductFormDialog
-        open={isDialogOpen}
-        onClose={() => setIsDialogOpen(false)}
-        onSuccess={handleSuccess}
-      />
+      {isDialogOpen && (
+        <ProductFormDialog
+          open={isDialogOpen}
+          onClose={() => setIsDialogOpen(false)}
+          onSuccess={handleSuccess}
+        />
+      )}
 
       <ManagementHeader
         title="Product Management"

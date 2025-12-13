@@ -23,6 +23,10 @@ import Link from "next/link";
 // SidebarUserProfile Component
 const SidebarUserProfile = ({ userInfo }: { userInfo: UserInfo }) => {
   const { isMobile } = useSidebar();
+  const displayName = userInfo?.name || "Logged User";
+  const displayEmail = userInfo?.email || "N/A";
+  const displayAvatar = userInfo?.profilePhoto || userInfo?.avatar;
+  const initials = displayName.substring(0, 2).toUpperCase();
 
   return (
     <SidebarMenu>
@@ -35,17 +39,22 @@ const SidebarUserProfile = ({ userInfo }: { userInfo: UserInfo }) => {
             >
               <Avatar className="h-8 w-8 rounded-lg">
                 <AvatarImage
-                  src={userInfo?.avatar}
-                  alt={userInfo?.name}
+                  src={displayAvatar}
+                  alt={displayName}
                   className="h-full w-full object-cover"
                 />
                 <AvatarFallback className="rounded-lg font-semibold">
-                  {userInfo?.name.substring(0, 2).toUpperCase()}
+                  {initials}
                 </AvatarFallback>
               </Avatar>
               <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-medium">{userInfo?.name}</span>
-                <span className="truncate text-xs">{userInfo?.email}</span>
+                <span className="truncate font-medium">{displayName}</span>
+                <span className="truncate text-xs">{displayEmail}</span>
+                {userInfo?.role ? (
+                  <span className="truncate text-[10px] uppercase text-muted-foreground">
+                    {userInfo.role}
+                  </span>
+                ) : null}
               </div>
               <ChevronsUpDown className="ml-auto size-4" />
             </SidebarMenuButton>
@@ -61,17 +70,22 @@ const SidebarUserProfile = ({ userInfo }: { userInfo: UserInfo }) => {
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                 <Avatar className="h-8 w-8 rounded-lg">
                   <AvatarImage
-                    src={userInfo?.avatar}
-                    alt={userInfo?.name}
+                    src={displayAvatar}
+                    alt={displayName}
                     className="h-full w-full object-cover"
                   />
                   <AvatarFallback className="rounded-lg font-semibold">
-                    {userInfo?.name.substring(0, 2).toUpperCase()}
+                    {initials}
                   </AvatarFallback>
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-medium">{userInfo?.name}</span>
-                  <span className="truncate text-xs">{userInfo?.email}</span>
+                  <span className="truncate font-medium">{displayName}</span>
+                  <span className="truncate text-xs pb-0.5">{displayEmail}</span>
+                  {userInfo?.role ? (
+                    <span className="truncate text-[10px] uppercase text-muted-foreground">
+                      {userInfo.role}
+                    </span>
+                  ) : null}
                 </div>
               </div>
             </DropdownMenuLabel>

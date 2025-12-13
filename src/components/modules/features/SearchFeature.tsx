@@ -20,7 +20,7 @@ const SearchFilter = ({
   const [isPending, startTransition] = useTransition();
   const searchParams = useSearchParams();
   const [value, setValue] = useState(searchParams.get(paramName) || "");
-  const debouncedValue = useDebounce(value, 750);
+  const debouncedValue = useDebounce(value, 500);
 
   useEffect(() => {
     const params = new URLSearchParams(searchParams.toString());

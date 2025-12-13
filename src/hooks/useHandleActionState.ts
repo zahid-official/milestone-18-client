@@ -33,7 +33,11 @@ const useHandleActionState = (
       }
     } else if (!state.errors?.length && state.message) {
       // Skip inline validation errors; only toast API/general errors
-      toast.error(state.message);
+      if (state.message === "No changes to update.") {
+        toast.warning(state.message);
+      } else {
+        toast.error(state.message);
+      }
     }
   }, [state, router, successMessage, redirectFallback]);
 };

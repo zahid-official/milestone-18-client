@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Menu, ShoppingCart } from "lucide-react";
+import { Menu } from "lucide-react";
 import Link from "next/link";
 import {
   DropdownMenu,
@@ -12,6 +12,7 @@ import { Separator } from "../../ui/separator";
 import Logo from "../Logo";
 import { getCookies } from "@/services/auth/cookies";
 import LogoutButton from "@/components/modules/auth/LogoutButton";
+import CartDialog from "./CartDialog";
 
 const Navbar = async () => {
   // Navigation links
@@ -50,9 +51,7 @@ const Navbar = async () => {
 
           {/* Cart & Buttons */}
           <div className="flex md:gap-3.5">
-            <div className="border p-2 rounded-full cursor-pointer">
-              <ShoppingCart size={21} />
-            </div>
+            <CartDialog />
 
             {accessToken ? (
               <LogoutButton />

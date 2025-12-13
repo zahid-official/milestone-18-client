@@ -2,10 +2,10 @@ import { IColumn } from "@/components/modules/dashboard/managementPage/Managemen
 import { IProduct } from "@/types/product.interface";
 import Image from "next/image";
 
-// Format prices consistently in BDT
-const currencyFormatter = new Intl.NumberFormat("en-BD", {
+// Format prices consistently in USD
+const currencyFormatter = new Intl.NumberFormat("en-US", {
   style: "currency",
-  currency: "BDT",
+  currency: "USD",
 });
 
 // Truncate long strings to keep the table compact

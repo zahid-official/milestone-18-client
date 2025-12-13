@@ -13,24 +13,33 @@ import { useTransition } from "react";
 interface ISelect {
   paramName: string;
   placeholder?: string;
+  defaultLabel?: string;
   options: { label: string; value: string }[];
 }
 
 // SelectFilter Component
-const SelectFilter = ({ paramName, placeholder, options }: ISelect) => {
+const SelectFilter = ({
+  paramName,
+  placeholder,
+  defaultLabel,
+  options,
+}: ISelect) => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [isPending, startTransition] = useTransition();
 
+  const defaultOptionValue = "__all__";
+  const defaultOptionLabel = defaultLabel || placeholder || "All";
+
   // Get current value from URL search params
-  const currentValue = searchParams.get(paramName) || "All";
+  const currentValue = searchParams.get(paramName) || defaultOptionValue;
 
   // Handle selection change
   const handleChange = (value: string) => {
     const params = new URLSearchParams(searchParams.toString());
 
     // Update or remove the param based on selection
-    if (value === "All") {
+    if (value === defaultOptionValue) {
       params.delete(paramName);
       params.delete("page");
     } else if (value) {
@@ -58,7 +67,9 @@ const SelectFilter = ({ paramName, placeholder, options }: ISelect) => {
           <SelectValue placeholder={placeholder} />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="All">All</SelectItem>
+          <SelectItem value={defaultOptionValue}>
+            {defaultOptionLabel}
+          </SelectItem>
           {options.map((option) => (
             <SelectItem key={option.value} value={option.value}>
               {option.label}

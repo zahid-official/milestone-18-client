@@ -4,9 +4,19 @@ import { Button } from "@/components/ui/button";
 import { Eye } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { getProducts } from "@/services/vendor/productManagement";
+import { IProduct } from "@/types/product.interface";
+
+const currencyFormatter = new Intl.NumberFormat("en-US", {
+  style: "currency",
+  currency: "USD",
+});
 
 // ShopProduct Component
-const ShopProduct = () => {
+const ShopProduct = async () => {
+  const result = await getProducts("limit=12");
+  const products: IProduct[] = Array.isArray(result?.data) ? result.data : [];
+
   return (
     <section className="">
       <PageBanner
@@ -20,42 +30,67 @@ const ShopProduct = () => {
       {/* Products */}
       <div className="max-w-7xl w-full mx-auto py-36 sm:space-y-10 space-y-5 px-4">
         <div className="text-center">
-          <h2 className="sm:text-3xl text-2xl font-semibold font-heading">
+          <h2 className="sm:text-4xl text-3xl pb-2 font-semibold font-heading">
             Browse Collections
           </h2>
           <p className="text-foreground/60">Best Seller and Trending Product</p>
         </div>
 
         <div className="lg:grid grid-cols-3 flex flex-wrap justify-center items-center gap-10">
-          {Array.from({ length: 6 }).map((_, idx) => (
-            <div key={idx} className="space-y-3">
-              <div className="group relative overflow-hidden">
-                {/* Image */}
-                <Image
-                  src={collection}
-                  alt="collection image"
-                  className="w-full h-full object-cover"
-                />
+          {products.length ? (
+            products.map((product) => {
+              const formattedPrice =
+                typeof product.price === "number"
+                  ? currencyFormatter.format(product.price)
+                  : "Price unavailable";
 
-                {/* Optional overlay */}
-                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-all duration-300"></div>
+              return (
+                <div
+                  key={product._id ?? product.title}
+                  className="space-y-3 w-full"
+                >
+                  <div className="group relative overflow-hidden aspect-square bg-muted">
+                    {/* Image */}
+                    <Image
+                      src={product.thumbnail || collection}
+                      alt={product.title || "collection image"}
+                      fill
+                      sizes="(min-width: 1024px) 320px, 100vw"
+                      className="object-cover w-full h-full"
+                    />
 
-                {/* Sliding Button */}
-                <Link href={`/shop/${"12233555"}`}>
-                  <Button className="absolute left-1/2 -translate-x-1/2 group-hover:-translate-y-16 opacity-0 group-hover:opacity-100 transition-all duration-300">
-                    <Eye />
-                    View Details
-                  </Button>
-                </Link>
-              </div>
+                    {/* Optional overlay */}
+                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-all duration-300"></div>
 
-              {/* Text */}
-              <div className="pl-2">
-                <h3 className="text-xl font-medium">Accent Leisure Chairs</h3>
-                <p className="text-foreground/70">BDT 599</p>
-              </div>
-            </div>
-          ))}
+                    {/* Sliding Button */}
+                    {product._id ? (
+                      <Button
+                        asChild
+                        className="absolute left-1/2 bottom-8 -translate-x-1/2 translate-y-8 group-hover:translate-y-1 opacity-0 group-hover:opacity-100 transition-all duration-300 z-10"
+                      >
+                        <Link href={`/shop/${product._id}`}>
+                          <Eye />
+                          View Details
+                        </Link>
+                      </Button>
+                    ) : null}
+                  </div>
+
+                  {/* Text */}
+                  <div className="pl-2">
+                    <h3 className="text-xl font-medium">
+                      {product.title || "Untitled Product"}
+                    </h3>
+                    <p className="text-foreground/70">{formattedPrice}</p>
+                  </div>
+                </div>
+              );
+            })
+          ) : (
+            <p className="col-span-3 text-center text-foreground/60">
+              Products are on the way. Please check back soon.
+            </p>
+          )}
         </div>
       </div>
     </section>

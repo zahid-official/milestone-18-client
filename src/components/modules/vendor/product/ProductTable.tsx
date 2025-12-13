@@ -3,6 +3,8 @@
 import ManagementTable from "@/components/modules/dashboard/managementPage/ManagementTable";
 import ConfirmDeleteDialog from "@/components/modules/features/ConfirmDeleteDialog";
 import productColumns from "@/components/modules/vendor/product/ProductColumns";
+import ProductDetailsViewDialog from "@/components/modules/vendor/product/ProductDetailsViewDialog";
+import ProductFormDialog from "@/components/modules/vendor/product/ProductFormDialog";
 import { deleteProduct } from "@/services/vendor/productManagement";
 import { IProduct } from "@/types/product.interface";
 import { useRouter } from "next/navigation";
@@ -18,6 +20,8 @@ const ProductTable = ({ products }: ProductTableProps) => {
   const router = useRouter();
   const [, startTransition] = useTransition();
   const [deletingProduct, setDeletingProduct] = useState<IProduct | null>(null);
+  const [viewingProduct, setViewingProduct] = useState<IProduct | null>(null);
+  const [editingProduct, setEditingProduct] = useState<IProduct | null>(null);
   const [isDeletingDialog, setIsDeletingDialog] = useState(false);
 
   // Refresh the current route after actions complete
@@ -30,6 +34,16 @@ const ProductTable = ({ products }: ProductTableProps) => {
   // Open delete confirmation dialog for the selected product
   const handleDelete = (product: IProduct) => {
     setDeletingProduct(product);
+  };
+
+  // Open product details dialog
+  const handleView = (product: IProduct) => {
+    setViewingProduct(product);
+  };
+
+  // Open edit dialog for the selected product
+  const handleEdit = (product: IProduct) => {
+    setEditingProduct(product);
   };
 
   // Confirm deletion and trigger backend call
@@ -60,10 +74,34 @@ const ProductTable = ({ products }: ProductTableProps) => {
       <ManagementTable
         data={products}
         columns={productColumns}
+        onView={handleView}
+        onEdit={handleEdit}
         onDelete={handleDelete}
         getRowKey={(product) => product._id || product.title}
         emptyMessage="No products found"
       />
+
+      {/* Edit product dialog */}
+      {editingProduct && (
+        <ProductFormDialog
+          open={!!editingProduct}
+          onClose={() => setEditingProduct(null)}
+          onSuccess={() => {
+            setEditingProduct(null);
+            handleRefresh();
+          }}
+          product={editingProduct}
+        />
+      )}
+
+      {/* View product detail dialog */}
+      {viewingProduct && (
+        <ProductDetailsViewDialog
+          open={!!viewingProduct}
+          onClose={() => setViewingProduct(null)}
+          product={viewingProduct}
+        />
+      )}
 
       {/* Delete Confirmation Dialog */}
       <ConfirmDeleteDialog

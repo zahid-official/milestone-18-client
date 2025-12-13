@@ -18,14 +18,24 @@ import { Input } from "@/components/ui/input";
 import { Spinner } from "@/components/ui/spinner";
 import { productCategory, productMaterials } from "@/constants/productCategory";
 import useHandleActionState from "@/hooks/useHandleActionState";
-import { createProduct } from "@/services/vendor/productManagement";
+import {
+  createProduct,
+  updateProduct,
+} from "@/services/vendor/productManagement";
 import getFieldError from "@/utils/getFieldError";
-import { useActionState, useEffect, useMemo } from "react";
+import {
+  IProduct,
+  IProductSpecifications,
+  ProductMaterials,
+} from "@/types/product.interface";
+import { useActionState, useEffect, useMemo, useState } from "react";
+import { toast } from "sonner";
 
 interface IProductFormDialog {
   open: boolean;
   onClose: () => void;
   onSuccess: () => void;
+  product?: IProduct | null;
 }
 
 // ProductFormDialog Component
@@ -33,18 +43,120 @@ const ProductFormDialog = ({
   open,
   onClose,
   onSuccess,
+  product,
 }: IProductFormDialog) => {
-  const [state, formAction, isPending] = useActionState(createProduct, null);
+  // Switch between create and update flows based on whether a product is provided
+  const isEdit = Boolean(product?._id);
+  const [state, formAction, isPending] = useActionState(
+    isEdit ? updateProduct.bind(null, product!._id!) : createProduct,
+    null
+  );
+  const [clientFileError, setClientFileError] = useState<string | null>(null);
+  const MAX_FILE_BYTES = 4.5 * 1024 * 1024;
 
   // Handle action state side effects
   useHandleActionState(state);
 
-  // Close dialog and bubble success back to parent when creation succeeds
+  // Close dialog and bubble success back to parent when submission succeeds
   useEffect(() => {
     if (!state?.success) return;
     onSuccess();
     onClose();
   }, [state, onClose, onSuccess]);
+
+  // Prevent submitting oversized files before the request reaches the server
+  const handleSubmit = async (formData: FormData) => {
+    setClientFileError(null);
+    const file = formData.get("file");
+
+    if (file instanceof File && file.size > MAX_FILE_BYTES) {
+      setClientFileError("Image must be 4.5MB or smaller.");
+      return;
+    }
+
+    // Skip calling the API if nothing changed (better UX + fewer calls)
+    if (isEdit && product) {
+      const parseNumber = (value: FormDataEntryValue | null) => {
+        if (typeof value === "string" && value.trim() !== "") {
+          const parsed = Number(value);
+          return Number.isNaN(parsed) ? undefined : parsed;
+        }
+        return undefined;
+      };
+      const getTextValue = (value: FormDataEntryValue | null) =>
+        typeof value === "string" && value.trim().length > 0
+          ? value.trim()
+          : undefined;
+
+      const materials = formData.get("materials");
+      const specsFromForm: IProductSpecifications = {
+        height: parseNumber(formData.get("height")),
+        weight: parseNumber(formData.get("weight")),
+        width: parseNumber(formData.get("width")),
+        length: parseNumber(formData.get("length")),
+        materials:
+          typeof materials === "string" && materials.trim().length > 0
+            ? (materials.trim() as ProductMaterials)
+            : undefined,
+      };
+      const hasSpecs = Object.values(specsFromForm).some(
+        (value) => value !== undefined
+      );
+
+      const payloadFromForm = {
+        title: getTextValue(formData.get("title")),
+        price: parseNumber(formData.get("price")),
+        stock: parseNumber(formData.get("stock")),
+        category: getTextValue(formData.get("category")),
+        description: getTextValue(formData.get("description")),
+        productOverview: getTextValue(formData.get("productOverview")),
+        specifications: hasSpecs ? specsFromForm : undefined,
+      };
+
+      const normalizeSpecs = (specs?: IProduct["specifications"]) => ({
+        height: specs?.height ?? undefined,
+        weight: specs?.weight ?? undefined,
+        width: specs?.width ?? undefined,
+        length: specs?.length ?? undefined,
+        materials:
+          specs?.materials ??
+          (specs?.meterials as ProductMaterials | undefined) ??
+          undefined,
+      });
+
+      const originalSpecs = normalizeSpecs(product.specifications);
+      const currentSpecs = normalizeSpecs(payloadFromForm.specifications);
+
+      const specsChanged = Object.keys(currentSpecs).some((key) => {
+        const k = key as keyof typeof currentSpecs;
+        return currentSpecs[k] !== originalSpecs[k];
+      });
+
+      const fieldsChanged = [
+        payloadFromForm.title !== undefined &&
+          payloadFromForm.title !== product.title,
+        payloadFromForm.price !== undefined &&
+          payloadFromForm.price !== product.price,
+        payloadFromForm.stock !== undefined &&
+          payloadFromForm.stock !== product.stock,
+        payloadFromForm.category !== undefined &&
+          payloadFromForm.category !== product.category,
+        payloadFromForm.description !== undefined &&
+          payloadFromForm.description !== product.description,
+        payloadFromForm.productOverview !== undefined &&
+          payloadFromForm.productOverview !== product.productOverview,
+        payloadFromForm.specifications !== undefined && specsChanged,
+        file instanceof File && file.size > 0,
+      ].some(Boolean);
+
+      if (!fieldsChanged) {
+        toast.warning("No changes to update.");
+        return;
+      }
+    }
+
+    return formAction(formData);
+  };
 
   // Map enum values to human-friendly labels for the select fields
   const materialOptions = useMemo(
@@ -71,11 +183,13 @@ const ProductFormDialog = ({
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-2xl max-w-[calc(100%-1.5rem)] max-h-[calc(100vh-2rem)] overflow-y-auto ">
         <DialogHeader>
-          <DialogTitle className="pb-2">Add New Product</DialogTitle>
+          <DialogTitle className="pb-2">
+            {isEdit ? "Update Product" : "Add New Product"}
+          </DialogTitle>
         </DialogHeader>
 
-        {/* Product create form */}
-        <form action={formAction} className="space-y-5">
+        {/* Product form handles both create and update */}
+        <form action={handleSubmit} className="space-y-5">
           <FieldSet>
             <div className="grid gap-3 sm:grid-cols-2">
               {/* Title and thumbnail side-by-side */}
@@ -91,6 +205,7 @@ const ProductFormDialog = ({
                     id="title"
                     name="title"
                     placeholder="Ergonomic office chair"
+                    defaultValue={product?.title}
                     disabled={isPending}
                   />
                   <FieldError>{getFieldError(state, "title")}</FieldError>
@@ -100,9 +215,11 @@ const ProductFormDialog = ({
               <Field>
                 <FieldLabel htmlFor="file">
                   Upload Thumbnail{" "}
-                  <span className="text-destructive" aria-hidden="true">
-                    *
-                  </span>
+                  {!isEdit && (
+                    <span className="text-destructive" aria-hidden="true">
+                      *
+                    </span>
+                  )}
                 </FieldLabel>
                 <FieldContent>
                   <Input
@@ -112,7 +229,14 @@ const ProductFormDialog = ({
                     accept="image/*"
                     disabled={isPending}
                   />
-                  <FieldError>{getFieldError(state, "file")}</FieldError>
+                  <FieldError>
+                    {clientFileError ?? getFieldError(state, "file")}
+                  </FieldError>
+                  {isEdit && (
+                    <p className="text-xs text-muted-foreground">
+                      Leave blank to keep the current thumbnail.
+                    </p>
+                  )}
                 </FieldContent>
               </Field>
             </div>
@@ -134,6 +258,7 @@ const ProductFormDialog = ({
                     min="0"
                     step="0.01"
                     placeholder="199.99"
+                    defaultValue={product?.price}
                     disabled={isPending}
                   />
                   <FieldError>{getFieldError(state, "price")}</FieldError>
@@ -155,6 +280,7 @@ const ProductFormDialog = ({
                     min="0"
                     step="1"
                     placeholder="20"
+                    defaultValue={product?.stock}
                     disabled={isPending}
                   />
                   <FieldError>{getFieldError(state, "stock")}</FieldError>
@@ -176,7 +302,7 @@ const ProductFormDialog = ({
                     id="category"
                     name="category"
                     className="h-9 w-full min-w-0 rounded-md border border-input bg-transparent px-3 text-sm text-foreground shadow-xs outline-none transition-[color,box-shadow] placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
-                    defaultValue=""
+                    defaultValue={product?.category || ""}
                     disabled={isPending}
                   >
                     <option value="" disabled>
@@ -199,7 +325,13 @@ const ProductFormDialog = ({
                     id="materials"
                     name="materials"
                     className="h-9 w-full min-w-0 rounded-md border border-input bg-transparent px-3 text-sm text-foreground shadow-xs outline-none transition-[color,box-shadow] placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
-                    defaultValue=""
+                    defaultValue={
+                      product?.specifications?.materials ||
+                      (product?.specifications?.meterials as
+                        | string
+                        | undefined) ||
+                      ""
+                    }
                     disabled={isPending}
                   >
                     <option value="" disabled>
@@ -228,6 +360,7 @@ const ProductFormDialog = ({
                     min="0"
                     step="0.1"
                     placeholder="45"
+                    defaultValue={product?.specifications?.height}
                     disabled={isPending}
                   />
                   <FieldError>{getFieldError(state, "height")}</FieldError>
@@ -244,6 +377,7 @@ const ProductFormDialog = ({
                     min="0"
                     step="0.1"
                     placeholder="60"
+                    defaultValue={product?.specifications?.width}
                     disabled={isPending}
                   />
                   <FieldError>{getFieldError(state, "width")}</FieldError>
@@ -260,6 +394,7 @@ const ProductFormDialog = ({
                     min="0"
                     step="0.1"
                     placeholder="120"
+                    defaultValue={product?.specifications?.length}
                     disabled={isPending}
                   />
                   <FieldError>{getFieldError(state, "length")}</FieldError>
@@ -276,6 +411,7 @@ const ProductFormDialog = ({
                     min="0"
                     step="0.1"
                     placeholder="8.5"
+                    defaultValue={product?.specifications?.weight}
                     disabled={isPending}
                   />
                   <FieldError>{getFieldError(state, "weight")}</FieldError>
@@ -298,6 +434,7 @@ const ProductFormDialog = ({
                     name="description"
                     placeholder="Summarize the product in a few sentences"
                     className="min-h-24 w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm text-foreground shadow-xs outline-none transition-[color,box-shadow] placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
+                    defaultValue={product?.description}
                     disabled={isPending}
                   />
                   <FieldError>{getFieldError(state, "description")}</FieldError>
@@ -314,6 +451,7 @@ const ProductFormDialog = ({
                     name="productOverview"
                     placeholder="Add rich details, materials, and usage recommendations"
                     className="min-h-24 w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm text-foreground shadow-xs outline-none transition-[color,box-shadow] placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
+                    defaultValue={product?.productOverview}
                     disabled={isPending}
                   />
                   <FieldError>
@@ -341,7 +479,7 @@ const ProductFormDialog = ({
                   Saving...
                 </>
               ) : (
-                "Save Product"
+                isEdit ? "Update Product" : "Save Product"
               )}
             </Button>
           </DialogFooter>
