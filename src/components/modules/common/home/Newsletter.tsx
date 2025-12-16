@@ -11,7 +11,7 @@ const Newsletter = () => {
           <h1 className="sm:text-4xl text-3xl font-semibold font-heading">
             Subscribe our <br className="max-lg:hidden" /> Newsletter
           </h1>
-          {/* <form className="flex max-w-sm w-full border border-white/60">
+          <form className="flex max-w-sm w-full border border-white/60">
             <input
               type="email"
               placeholder="Enter your email here"
@@ -23,7 +23,7 @@ const Newsletter = () => {
             >
               <ArrowRight size={22} />
             </button>
-          </form>*/}
+          </form>
         </div>
         <Image
           className="absolute max-lg:hidden right-0 bottom-0"
