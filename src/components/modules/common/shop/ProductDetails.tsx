@@ -1,5 +1,4 @@
 import Image from "next/image";
-
 import collection from "@/assets/collection-1.jpg";
 import PageBanner from "@/components/shared/PageBanner";
 import { IProduct, IProductSpecifications } from "@/types/product.interface";
@@ -63,7 +62,7 @@ const ProductDetails = ({ product }: ProductDetailsProps) => {
 
       <div className="max-w-7xl w-full mx-auto py-20 sm:py-28 space-y-12 px-4">
         <div className="grid lg:grid-cols-2 gap-10 items-center">
-          <div className="flex justify-center items-center max-w-sm mx-auto drop-shadow-lg">
+          <div className="w-full max-w-sm mx-auto drop-shadow-lg">
             <Image
               src={product?.thumbnail || collection}
               alt={product?.title || "product image"}
