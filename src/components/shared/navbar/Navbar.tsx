@@ -54,7 +54,7 @@ const Navbar = async () => {
             <CartDialog />
 
             {accessToken ? (
-              <LogoutButton />
+              <LogoutButton className="max-md:hidden" />
             ) : (
               <Link href={"/login"}>
                 <Button className="max-md:hidden px-6 text-base">Login</Button>
@@ -82,9 +82,11 @@ const Navbar = async () => {
 
                 <DropdownMenuSeparator className="mt-2.5" />
                 {/* Buttons */}
-                <DropdownMenuItem asChild className="bg-transparent! p-0">
+                <DropdownMenuItem asChild className="p-0">
                   {accessToken ? (
-                    <LogoutButton />
+                    <div>
+                      <LogoutButton className="w-full mt-1.5" />
+                    </div>
                   ) : (
                     <Link href={"/login"}>
                       <Button className="w-full mt-1.5">Login</Button>

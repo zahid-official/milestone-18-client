@@ -29,8 +29,8 @@ const ShopProduct = async () => {
 
       {/* Products */}
       <div className="max-w-7xl w-full mx-auto py-36 sm:space-y-10 space-y-5 px-4">
-        <div className="text-center">
-          <h2 className="sm:text-4xl text-3xl pb-2 font-semibold font-heading">
+        <div className="space-y-2 text-center">
+          <h2 className="sm:text-4xl text-3xl font-semibold font-heading">
             Browse Collections
           </h2>
           <p className="text-foreground/60">Best Seller and Trending Product</p>
@@ -47,7 +47,7 @@ const ShopProduct = async () => {
               return (
                 <div
                   key={product._id ?? product.title}
-                  className="space-y-3 w-full"
+                  className="space-y-3 w-full max-w-sm"
                 >
                   <div className="group relative overflow-hidden aspect-square bg-muted">
                     {/* Image */}
