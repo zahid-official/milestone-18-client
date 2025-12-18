@@ -1,6 +1,6 @@
 "use server";
 import createOrderSchema from "@/schemas/order.validation";
-import { ActionState, IOrder, OrderStatus, PaymentStatus } from "@/types";
+import { ActionState, IOrder } from "@/types";
 import serverFetchApi from "@/utils/serverFetchApi";
 import zodValidator from "@/utils/zodValidator";
 
@@ -201,14 +201,19 @@ const createOrder = async (
 
     const validatedPayload = zodValidator(createOrderSchema, payload);
     if (!validatedPayload.success) {
-      return validatedPayload;
+      return {
+        success: false,
+        message: validatedPayload.message,
+        errors: validatedPayload.errors,
+      };
     }
+    const validatedData = validatedPayload.data!;
 
     const res = await serverFetchApi.post("/order/create", {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(validatedPayload.data),
+      body: JSON.stringify(validatedData),
     });
     const result = await res.json();
 
@@ -246,9 +251,7 @@ const createOrder = async (
 };
 
 // Helpers for status updates
-const updateOrderStatus = async (
-  endpoint: string
-): Promise<ActionState> => {
+const updateOrderStatus = async (endpoint: string): Promise<ActionState> => {
   try {
     const res = await serverFetchApi.patch(endpoint);
     const result = await res.json();
@@ -296,12 +299,12 @@ const cancelOrder = async (orderId: string): Promise<ActionState> => {
 };
 
 export {
-  getOrders,
-  getUserOrders,
-  getOrderById,
-  getUserOrderById,
-  createOrder,
-  markOrderInProgress,
-  markOrderDelivered,
   cancelOrder,
+  createOrder,
+  getOrderById,
+  getOrders,
+  getUserOrderById,
+  getUserOrders,
+  markOrderDelivered,
+  markOrderInProgress,
 };
