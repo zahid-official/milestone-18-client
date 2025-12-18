@@ -1,6 +1,7 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
+import { CART_KEY, useOptionalCart } from "@/providers/CartProvider";
 import logoutUser from "@/services/auth/logoutUser";
 import { useRouter } from "next/navigation";
 import { useTransition } from "react";
@@ -27,13 +28,25 @@ const LogoutButton = ({
   loading = false,
 }: IProps) => {
   const router = useRouter();
+  const cart = useOptionalCart();
   const [isPending, startTransition] = useTransition();
+
+  const clearCart = () => {
+    try {
+      localStorage.removeItem(CART_KEY);
+    } catch (error) {
+      console.error("Failed to clear cart from storage", error);
+    }
+
+    cart?.clearCart();
+  };
 
   const handleLogout = () => {
     startTransition(async () => {
       const res = await logoutUser();
 
       if (res.success) {
+        clearCart();
         const target = "/login";
         router.prefetch(target);
         router.replace(target);
