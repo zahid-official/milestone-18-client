@@ -13,12 +13,25 @@ const vendorNavItems: NavGroup[] = [
         title: "Product Management",
         url: "/vendor/product-management",
         icon: "Sofa",
-        roles: [...Object.values(userRole)],
+        roles: [userRole.VENDOR],
       },
     ],
   },
 ];
-const customerNavItems: NavGroup[] = [];
+
+const customerNavItems: NavGroup[] = [
+  {
+    groupLabel: "Customer Service",
+    navItems: [
+      {
+        title: "Order History",
+        url: "/dashboard/order-history",
+        icon: "ShoppingBag",
+        roles: [userRole.CUSTOMER],
+      },
+    ],
+  },
+];
 
 // Get common navitems
 const getCommonNavItems = (role: UserRole): NavGroup[] => {
