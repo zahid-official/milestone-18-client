@@ -163,7 +163,7 @@ const Checkout = ({ user }: CheckoutProps) => {
             </div>
             <Separator />
             <div className="flex items-center justify-between text-base font-semibold">
-              <span>Total</span>
+              <span>Total Amount</span>
               <span>{currency.format(total)}</span>
             </div>
             <Button

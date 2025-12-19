@@ -63,7 +63,10 @@ const OrderHistoryPage = async ({ searchParams }: IProps) => {
         ></ManagementHeader>
 
         <div className="flex max-sm:flex-wrap max-sm:justify-center items-center gap-4">
-          <SearchFilter placeholder="Search by product or status" />
+          <SearchFilter
+            paramName="searchTerm"
+            placeholder="Search by order/payment status"
+          />
           <SelectFilter
             paramName="orderStatus"
             placeholder="Filter by order status"

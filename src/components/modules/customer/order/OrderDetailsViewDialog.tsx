@@ -165,7 +165,7 @@ const OrderDetailsViewDialog = ({
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="max-w-xl! max-h-[calc(100vh-3rem)] overflow-y-auto border-0 bg-background p-0 shadow-2xl">
+      <DialogContent className=" max-h-[calc(100vh-3rem)] overflow-y-auto border-0 bg-background p-0 shadow-2xl">
         <DialogHeader className="sm:px-8 px-4 pt-8">
           <DialogTitle className="text-2xl font-semibold">
             Order Details
@@ -241,10 +241,20 @@ const OrderDetailsViewDialog = ({
               Order Snapshot
             </div>
             <div className="grid gap-4 justify-center items-center grid-cols-2 lg:grid-cols-3">
-              <InfoRow label="Transaction ID" value={transactionId || "N/A"} />
               <InfoRow label="Order Status" value={orderStatusBadge} />
               <InfoRow label="Payment Status" value={paymentStatusBadge} />
               <InfoRow label="Placed On" value={placedOn} />
+            </div>
+
+            <div className="grid gap-4 justify-center items-center sm:grid-cols-2">
+              <InfoRow
+                label="Transaction ID"
+                value={
+                  <span className="break-all whitespace-normal">
+                    {transactionId || "N/A"}
+                  </span>
+                }
+              />
               <InfoRow
                 label="Customer"
                 value={user?.email || user?.name || "Current user"}
@@ -276,8 +286,8 @@ const OrderDetailsViewDialog = ({
                 Payment
               </div>
               <div className="grid gap-3 sm:grid-cols-2">
-                <InfoRow label="Quantity" value={order.quantity} />
                 <InfoRow label="Per Unit" value={unitPriceLabel} />
+                <InfoRow label="Quantity" value={order.quantity} />
                 <InfoRow label="Total Paid" value={totalAmountLabel} />
               </div>
             </div>

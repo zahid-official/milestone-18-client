@@ -1,10 +1,10 @@
 import { IColumn } from "@/components/modules/dashboard/managementPage/ManagementTable";
-import {
-  IOrder,
-  IOrderPaymentInfo,
-  OrderProductSummary,
-} from "@/types";
+import { IOrder, IOrderPaymentInfo, OrderProductSummary } from "@/types";
 import Image from "next/image";
+
+// Truncate long strings to keep the table compact
+const truncateText = (text: string, max = 30) =>
+  text.length > max ? `${text.slice(0, max)}...` : text;
 
 const currencyFormatter = new Intl.NumberFormat("en-US", {
   style: "currency",
@@ -15,9 +15,9 @@ const statusBadgeBase =
   "inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs font-semibold";
 
 const orderStatusStyles: Record<string, string> = {
-  PENDING: "bg-amber-50 text-amber-700 dark:bg-amber-500/10 dark:text-amber-100",
-  CONFIRMED:
-    "bg-blue-50 text-blue-700 dark:bg-blue-500/10 dark:text-blue-100",
+  PENDING:
+    "bg-amber-50 text-amber-700 dark:bg-amber-500/10 dark:text-amber-100",
+  CONFIRMED: "bg-blue-50 text-blue-700 dark:bg-blue-500/10 dark:text-blue-100",
   IN_PROCESSING:
     "bg-indigo-50 text-indigo-700 dark:bg-indigo-500/10 dark:text-indigo-100",
   DELIVERED:
@@ -28,8 +28,7 @@ const orderStatusStyles: Record<string, string> = {
 
 const paymentStatusStyles: Record<string, string> = {
   PAID: "bg-emerald-50 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-100",
-  UNPAID:
-    "bg-amber-50 text-amber-700 dark:bg-amber-500/10 dark:text-amber-100",
+  UNPAID: "bg-amber-50 text-amber-700 dark:bg-amber-500/10 dark:text-amber-100",
   FAILED:
     "bg-destructive/10 text-destructive dark:bg-destructive/20 dark:text-destructive-foreground",
 };
@@ -150,7 +149,7 @@ const renderTransaction = (order: IOrder) => {
     paymentInfo?._id ||
     (typeof order.paymentId === "string" ? order.paymentId : undefined);
 
-  return transactionId || "-";
+  return transactionId ? truncateText(transactionId) : "-";
 };
 
 const orderColumns: IColumn<IOrder>[] = [
@@ -165,7 +164,7 @@ const orderColumns: IColumn<IOrder>[] = [
     className: "w-[60px]",
   },
   {
-    header: "Total",
+    header: "Total Amount",
     accessor: (order) => {
       const amount = calculateAmount(order);
       return amount !== undefined ? currencyFormatter.format(amount) : "-";
