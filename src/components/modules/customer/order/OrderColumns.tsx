@@ -1,5 +1,6 @@
 import { IColumn } from "@/components/modules/dashboard/managementPage/ManagementTable";
 import { IOrder, IOrderPaymentInfo, OrderProductSummary } from "@/types";
+import { Button } from "@/components/ui/button";
 import Image from "next/image";
 
 // Truncate long strings to keep the table compact
@@ -168,6 +169,20 @@ const renderTransaction = (order: IOrder) => {
   return transactionId ? truncateText(transactionId) : "-";
 };
 
+const renderPaymentAction = (order: IOrder) => {
+  const paymentInfo = getPaymentInfo(order.paymentId);
+  const paymentURL = paymentInfo?.paymentURL;
+  if (!paymentURL) return "-";
+
+  return (
+    <Button asChild variant="outline" size="sm">
+      <a href={paymentURL} target="_blank" rel="noreferrer">
+        Finish Payment
+      </a>
+    </Button>
+  );
+};
+
 const orderColumns: IColumn<IOrder>[] = [
   {
     header: "Product",
@@ -196,6 +211,11 @@ const orderColumns: IColumn<IOrder>[] = [
     header: "Payment Status",
     accessor: (order) => renderPaymentBadge(order.paymentStatus),
     className: "min-w-[100px]",
+  },
+  {
+    header: "Pending Payment",
+    accessor: (order) => renderPaymentAction(order),
+    className: "min-w-[140px]",
   },
   {
     header: "Transaction",

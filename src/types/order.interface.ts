@@ -24,6 +24,7 @@ export interface IOrderUserInfo {
 export interface IOrderPaymentInfo {
   _id?: string;
   transactionId?: string;
+  paymentURL?: string | null;
 }
 
 // Product summary returned with an order
