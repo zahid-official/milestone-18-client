@@ -42,6 +42,7 @@ export interface IOrder {
   paymentId?: string | IOrderPaymentInfo;
   quantity: number;
   amount?: number;
+  shippingFee: number;
   orderStatus: OrderStatus;
   paymentStatus?: PaymentStatus;
   createdAt?: string;

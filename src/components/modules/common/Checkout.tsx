@@ -57,6 +57,7 @@ const Checkout = ({ user }: CheckoutProps) => {
           const formData = new FormData();
           formData.append("productId", item._id);
           formData.append("quantity", item.quantity.toString());
+          formData.append("shippingFee", shipping.toString());
 
           const result = await createOrder(null, formData);
 
