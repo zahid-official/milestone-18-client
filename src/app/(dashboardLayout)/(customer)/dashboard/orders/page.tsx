@@ -32,8 +32,8 @@ interface IProps {
   searchParams?: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
-// OrderHistoryPage Component
-const OrderHistoryPage = async ({ searchParams }: IProps) => {
+// OrderPage Component
+const OrderPage = async ({ searchParams }: IProps) => {
   const params = (await searchParams) || {};
   const queryString = queryFormatter(params);
 
@@ -58,8 +58,8 @@ const OrderHistoryPage = async ({ searchParams }: IProps) => {
     <div className="space-y-6 pb-14 sm:px-10">
       <header className="space-y-4">
         <ManagementHeader
-          title="Order History"
-          description="Review your orders, payment status, and delivery updates."
+          title="Orders"
+          description="Review your orders, payment status and delivery updates."
         ></ManagementHeader>
 
         <div className="flex max-sm:flex-wrap max-sm:justify-center items-center gap-4">
@@ -100,4 +100,4 @@ const OrderHistoryPage = async ({ searchParams }: IProps) => {
   );
 };
 
-export default OrderHistoryPage;
+export default OrderPage;

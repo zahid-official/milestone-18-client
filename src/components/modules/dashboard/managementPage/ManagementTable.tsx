@@ -35,6 +35,8 @@ export interface IManagementTable<T> {
   getRowKey: (row: T) => string;
   emptyMessage?: string;
   isRefreshing?: boolean;
+  deleteLabel?: string;
+  deleteIcon?: React.ReactNode;
 }
 
 // ManagementTable Component
@@ -47,10 +49,16 @@ function ManagementTable<T>({
   getRowKey,
   emptyMessage = "No records found.",
   isRefreshing = false,
+  deleteLabel,
+  deleteIcon,
 }: IManagementTable<T>) {
   // Determine if any actions are provided
   const hasActions = Boolean(onView || onEdit || onDelete);
   const columnCount = columns.length + (hasActions ? 1 : 0);
+  const deleteActionLabel = deleteLabel ?? "Delete";
+  const deleteActionIcon = deleteIcon ?? (
+    <Trash2 className="size-4 text-destructive focus:text-destructive" />
+  );
 
   // Helper to render cell content based on accessor type
   const renderCell = (
@@ -169,8 +177,8 @@ function ManagementTable<T>({
                             onClick={() => onDelete?.(row)}
                             className="cursor-pointer"
                           >
-                            <Trash2 className="size-4 text-destructive focus:text-destructive" />
-                            Delete
+                            {deleteActionIcon}
+                            {deleteActionLabel}
                           </DropdownMenuItem>
                         )}
                       </DropdownMenuContent>

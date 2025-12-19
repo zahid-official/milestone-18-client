@@ -24,8 +24,8 @@ const customerNavItems: NavGroup[] = [
     groupLabel: "Customer Service",
     navItems: [
       {
-        title: "Order History",
-        url: "/dashboard/order-history",
+        title: "Orders",
+        url: "/dashboard/orders",
         icon: "ShoppingBag",
         roles: [userRole.CUSTOMER],
       },
