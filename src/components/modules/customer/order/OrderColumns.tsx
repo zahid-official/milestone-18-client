@@ -159,14 +159,9 @@ const renderProductCell = (order: IOrder) => {
   );
 };
 
-const renderTransaction = (order: IOrder) => {
-  const paymentInfo = getPaymentInfo(order.paymentId);
-  const transactionId =
-    paymentInfo?.transactionId ||
-    paymentInfo?._id ||
-    (typeof order.paymentId === "string" ? order.paymentId : undefined);
-
-  return transactionId ? truncateText(transactionId) : "-";
+const renderOrderId = (order: IOrder) => {
+  const orderId = order._id?.trim();
+  return orderId ? truncateText(orderId) : "-";
 };
 
 const renderPaymentAction = (order: IOrder) => {
@@ -218,8 +213,8 @@ const orderColumns: IColumn<IOrder>[] = [
     className: "min-w-[140px]",
   },
   {
-    header: "Transaction",
-    accessor: (order) => renderTransaction(order),
+    header: "Order ID",
+    accessor: (order) => renderOrderId(order),
     className: "min-w-[100px]",
   },
   {

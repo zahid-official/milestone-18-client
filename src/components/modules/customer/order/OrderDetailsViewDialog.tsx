@@ -7,11 +7,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import {
-  IOrder,
-  IOrderPaymentInfo,
-  OrderProductSummary,
-} from "@/types";
+import { IOrder, IOrderPaymentInfo, OrderProductSummary } from "@/types";
 import { IProductSpecifications } from "@/types/product.interface";
 import { CreditCard, Package, Receipt, Tag } from "lucide-react";
 import Image from "next/image";
@@ -88,10 +84,7 @@ const getPaymentInfo = (
 
 const formatCategory = (category?: string) => {
   if (!category) return "N/A";
-  return category
-    .split("_")
-    .map((part) => part.charAt(0) + part.slice(1).toLowerCase())
-    .join(" ");
+  return category.replace(/_/g, " ").toUpperCase();
 };
 
 const formatSpecifications = (specs?: IProductSpecifications) => {
@@ -111,6 +104,31 @@ const formatSpecifications = (specs?: IProductSpecifications) => {
   }
 
   return dimensionsText || weightText || "Not specified";
+};
+
+const formatMaterialLabel = (value: string) => {
+  const trimmed = value.trim();
+  if (!trimmed) return "";
+  return trimmed
+    .split("_")
+    .map((part) => part.charAt(0) + part.slice(1).toLowerCase())
+    .join(" ");
+};
+
+const formatMaterials = (specs?: IProductSpecifications) => {
+  if (!specs) return undefined;
+  const materials = specs.materials ?? specs.meterials;
+  if (materials === undefined || materials === null) return undefined;
+  if (Array.isArray(materials)) {
+    const list = materials
+      .filter(Boolean)
+      .map((value) => formatMaterialLabel(String(value)))
+      .filter(Boolean)
+      .join(", ");
+    return list.trim() ? list : undefined;
+  }
+  const text = formatMaterialLabel(String(materials));
+  return text.length ? text : undefined;
 };
 
 const OrderDetailsViewDialog = ({
@@ -142,11 +160,13 @@ const OrderDetailsViewDialog = ({
     ? currencyFormatter.format(order.shippingFee)
     : "N/A";
 
-
   const unitPriceLabel =
     product?.price !== undefined
       ? currencyFormatter.format(product.price)
       : "N/A";
+
+  const materialsText =
+    formatMaterials(product?.specifications) || "Not specified";
 
   const placedOn = formatDateTime(order.createdAt);
 
@@ -210,24 +230,23 @@ const OrderDetailsViewDialog = ({
 
           {/* Title row */}
           <div className="flex flex-wrap items-start gap-4 rounded-xl border bg-card/50 p-4 shadow-sm">
-            <div className="flex flex-1 flex-col gap-3">
-              <div className="flex flex-wrap items-center gap-2 text-xs font-semibold">
-                <span className="inline-flex uppercase rounded items-center gap-2 bg-primary/10 px-3 py-1 text-primary">
-                  <Tag className="size-4" />
-                  {formatCategory(product?.category)}
-                </span>
-              </div>
+            <div className="flex flex-1 flex-col gap-2">
+              <span className="inline-flex uppercase items-center gap-1 text-xs">
+                <Tag className="size-4" />
+                {formatCategory(product?.category)}
+              </span>
+              <p className="text-xl font-bold">
+                {product?.title || "Unknown product"}
+              </p>
 
-              <div>
-                <h2 className="text-xl py-1 font-semibold leading-tight">
-                  {product?.title || "Unknown product"}
-                </h2>
-                <p className="text-sm text-muted-foreground">
-                  {product?.description || "No description available"}
-                </p>
+              <div className="flex text-xs font-semibold">
+                <span className="rounded-full bg-muted px-3 py-1 text-foreground">
+                  Materials: {materialsText}
+                </span>
               </div>
             </div>
 
+            {/* Right */}
             <div className="flex flex-col items-end gap-2">
               <p className="text-xs uppercase tracking-wide text-muted-foreground">
                 Total
@@ -253,9 +272,10 @@ const OrderDetailsViewDialog = ({
               <Receipt className="size-4 text-muted-foreground" />
               Order Snapshot
             </div>
-            <div className="grid gap-4 justify-center items-center grid-cols-2 lg:grid-cols-3">
+            <div className="grid gap-4 sm:grid-cols-2">
               <InfoRow label="Order Status" value={orderStatusBadge} />
               <InfoRow label="Payment Status" value={paymentStatusBadge} />
+              <InfoRow label="Order ID" value={order._id} />
               <InfoRow label="Placed On" value={placedOn} />
             </div>
 
@@ -270,8 +290,8 @@ const OrderDetailsViewDialog = ({
           </div>
 
           {/* Product Details */}
-          <div className="rounded-xl border bg-card/50 p-4 shadow-sm">
-            <div className="mb-3 flex items-center gap-2 text-sm font-semibold">
+          <div className="rounded-xl border bg-card/50 p-4 shadow-sm space-y-3">
+            <div className="flex items-center gap-2 text-sm font-semibold">
               <Package className="size-4 text-muted-foreground" />
               Product Details
             </div>
@@ -281,12 +301,17 @@ const OrderDetailsViewDialog = ({
                 label="Category"
                 value={formatCategory(product?.category)}
               />
-              <InfoRow label="Description" value={product?.description} />
+              <InfoRow
+                label="Materials"
+                value={formatMaterials(product?.specifications)}
+              />
               <InfoRow
                 label="Specifications"
                 value={formatSpecifications(product?.specifications)}
               />
             </div>
+
+            <InfoRow label="Description" value={product?.description} />
           </div>
 
           {/* Payment Details */}
@@ -309,4 +334,3 @@ const OrderDetailsViewDialog = ({
 };
 
 export default OrderDetailsViewDialog;
-
