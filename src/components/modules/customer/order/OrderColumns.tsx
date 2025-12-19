@@ -11,6 +11,19 @@ const currencyFormatter = new Intl.NumberFormat("en-US", {
   currency: "USD",
 });
 
+const parseNumber = (value?: number | string) => {
+  if (typeof value === "number") {
+    return Number.isNaN(value) ? undefined : value;
+  }
+  if (typeof value === "string") {
+    const trimmed = value.trim();
+    if (!trimmed) return undefined;
+    const parsed = Number(trimmed);
+    return Number.isNaN(parsed) ? undefined : parsed;
+  }
+  return undefined;
+};
+
 const statusBadgeBase =
   "inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs font-semibold";
 
@@ -79,16 +92,19 @@ const formatCategory = (category?: string) => {
 };
 
 const calculateAmount = (order: IOrder) => {
-  if (typeof order.amount === "number") return order.amount;
-  if (typeof order.amount === "string") {
-    const parsed = Number(order.amount);
-    if (!Number.isNaN(parsed)) return parsed;
-  }
+  const explicitAmount = parseNumber(order.amount);
+  if (explicitAmount !== undefined) return explicitAmount;
+
   const product = getProductInfo(order.productId);
-  if (product?.price) {
-    return product.price * (order.quantity || 1);
+  const quantity = order.quantity || 1;
+  const itemTotal = product?.price ? product.price * quantity : undefined;
+  const shippingFee = parseNumber(order.shippingFee);
+
+  if (itemTotal !== undefined) {
+    return shippingFee !== undefined ? itemTotal + shippingFee : itemTotal;
   }
-  return undefined;
+
+  return shippingFee;
 };
 
 const renderStatusBadge = (status?: string) => {
@@ -136,7 +152,7 @@ const renderProductCell = (order: IOrder) => {
 
       <div className="space-y-0.5">
         <p className="text-sm font-semibold leading-tight">{title}</p>
-        <p className="text-xs text-muted-foreground">{category}</p>
+        <p className="text-xs text-muted-foreground uppercase">{category}</p>
       </div>
     </div>
   );
@@ -156,12 +172,12 @@ const orderColumns: IColumn<IOrder>[] = [
   {
     header: "Product",
     accessor: (order) => renderProductCell(order),
-    className: "min-w-[200px]",
+    className: "min-w-[180px]",
   },
   {
-    header: "Qty",
+    header: "Quantity",
     accessor: (order) => order.quantity ?? "-",
-    className: "w-[60px]",
+    className: "w-[110px]",
   },
   {
     header: "Total Amount",
@@ -174,22 +190,22 @@ const orderColumns: IColumn<IOrder>[] = [
   {
     header: "Order Status",
     accessor: (order) => renderStatusBadge(order.orderStatus),
-    className: "min-w-[130px]",
+    className: "min-w-[100px]",
   },
   {
     header: "Payment Status",
     accessor: (order) => renderPaymentBadge(order.paymentStatus),
-    className: "min-w-[140px]",
+    className: "min-w-[100px]",
   },
   {
     header: "Transaction",
     accessor: (order) => renderTransaction(order),
-    className: "min-w-[140px]",
+    className: "min-w-[100px]",
   },
   {
     header: "Placed On",
     accessor: (order) => formatDate(order.createdAt),
-    className: "min-w-[140px]",
+    className: "min-w-[100px]",
   },
 ];
 

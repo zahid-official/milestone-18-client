@@ -10,9 +10,9 @@ import {
 import {
   IOrder,
   IOrderPaymentInfo,
-  IOrderUserInfo,
   OrderProductSummary,
 } from "@/types";
+import { IProductSpecifications } from "@/types/product.interface";
 import { CreditCard, Package, Receipt, Tag } from "lucide-react";
 import Image from "next/image";
 
@@ -65,8 +65,6 @@ const formatDateTime = (value?: string) => {
     year: "numeric",
     month: "short",
     day: "numeric",
-    hour: "numeric",
-    minute: "2-digit",
   });
 };
 
@@ -75,13 +73,6 @@ const getProductInfo = (
 ): OrderProductSummary | undefined => {
   if (productId && typeof productId === "object") {
     return productId as OrderProductSummary;
-  }
-  return undefined;
-};
-
-const getUserInfo = (userId: IOrder["userId"]): IOrderUserInfo | undefined => {
-  if (userId && typeof userId === "object") {
-    return userId as IOrderUserInfo;
   }
   return undefined;
 };
@@ -103,6 +94,25 @@ const formatCategory = (category?: string) => {
     .join(" ");
 };
 
+const formatSpecifications = (specs?: IProductSpecifications) => {
+  if (!specs) return "Not specified";
+
+  const { width, length, height, weight } = specs;
+  const dimensions = [width, length, height].filter(
+    (value) => value !== undefined && value !== null
+  );
+  const dimensionsText = dimensions.length
+    ? `${dimensions.join(" × ")} cm`
+    : undefined;
+  const weightText = weight ? `${weight} kg` : undefined;
+
+  if (dimensionsText && weightText) {
+    return `${dimensionsText} • ${weightText}`;
+  }
+
+  return dimensionsText || weightText || "Not specified";
+};
+
 const OrderDetailsViewDialog = ({
   open,
   onClose,
@@ -113,7 +123,6 @@ const OrderDetailsViewDialog = ({
   }
 
   const product = getProductInfo(order.productId);
-  const user = getUserInfo(order.userId);
   const payment = getPaymentInfo(order.paymentId);
 
   const totalAmount =
@@ -129,6 +138,10 @@ const OrderDetailsViewDialog = ({
     totalAmount !== undefined
       ? currencyFormatter.format(totalAmount)
       : "Amount N/A";
+  const shippingFeeLabel = Number.isFinite(order.shippingFee)
+    ? currencyFormatter.format(order.shippingFee)
+    : "N/A";
+
 
   const unitPriceLabel =
     product?.price !== undefined
@@ -210,7 +223,7 @@ const OrderDetailsViewDialog = ({
                   {product?.title || "Unknown product"}
                 </h2>
                 <p className="text-sm text-muted-foreground">
-                  Placed on {placedOn}
+                  {product?.description || "No description available"}
                 </p>
               </div>
             </div>
@@ -246,50 +259,47 @@ const OrderDetailsViewDialog = ({
               <InfoRow label="Placed On" value={placedOn} />
             </div>
 
-            <div className="grid gap-4 justify-center items-center sm:grid-cols-2">
+            <InfoRow
+              label="Transaction ID"
+              value={
+                <span className="break-all whitespace-normal">
+                  {transactionId || "N/A"}
+                </span>
+              }
+            />
+          </div>
+
+          {/* Product Details */}
+          <div className="rounded-xl border bg-card/50 p-4 shadow-sm">
+            <div className="mb-3 flex items-center gap-2 text-sm font-semibold">
+              <Package className="size-4 text-muted-foreground" />
+              Product Details
+            </div>
+            <div className="grid gap-3 sm:grid-cols-2">
+              <InfoRow label="Product" value={product?.title || "N/A"} />
               <InfoRow
-                label="Transaction ID"
-                value={
-                  <span className="break-all whitespace-normal">
-                    {transactionId || "N/A"}
-                  </span>
-                }
+                label="Category"
+                value={formatCategory(product?.category)}
               />
+              <InfoRow label="Description" value={product?.description} />
               <InfoRow
-                label="Customer"
-                value={user?.email || user?.name || "Current user"}
+                label="Specifications"
+                value={formatSpecifications(product?.specifications)}
               />
             </div>
           </div>
 
-          {/* Details */}
-          <div className="grid gap-4 md:grid-cols-2">
-            <div className="rounded-xl border bg-card/50 p-4 shadow-sm">
-              <div className="mb-3 flex items-center gap-2 text-sm font-semibold">
-                <Package className="size-4 text-muted-foreground" />
-                Product Details
-              </div>
-              <div className="grid gap-3 sm:grid-cols-2">
-                <InfoRow label="Product" value={product?.title || "N/A"} />
-                <InfoRow
-                  label="Category"
-                  value={formatCategory(product?.category)}
-                />
-                <InfoRow label="Unit Price" value={unitPriceLabel} />
-                <InfoRow label="Quantity" value={order.quantity} />
-              </div>
+          {/* Payment Details */}
+          <div className="rounded-xl border bg-card/50 p-4 shadow-sm">
+            <div className="mb-3 flex items-center gap-2 text-sm font-semibold">
+              <CreditCard className="size-4 text-muted-foreground" />
+              Payment
             </div>
-
-            <div className="rounded-xl border bg-card/50 p-4 shadow-sm">
-              <div className="mb-3 flex items-center gap-2 text-sm font-semibold">
-                <CreditCard className="size-4 text-muted-foreground" />
-                Payment
-              </div>
-              <div className="grid gap-3 sm:grid-cols-2">
-                <InfoRow label="Per Unit" value={unitPriceLabel} />
-                <InfoRow label="Quantity" value={order.quantity} />
-                <InfoRow label="Total Paid" value={totalAmountLabel} />
-              </div>
+            <div className="grid gap-3 sm:grid-cols-2">
+              <InfoRow label="Unit Price" value={unitPriceLabel} />
+              <InfoRow label="Quantity" value={order.quantity} />
+              <InfoRow label="Shipping" value={shippingFeeLabel} />
+              <InfoRow label="Total Paid" value={totalAmountLabel} />
             </div>
           </div>
         </div>
@@ -299,3 +309,4 @@ const OrderDetailsViewDialog = ({
 };
 
 export default OrderDetailsViewDialog;
+

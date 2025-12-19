@@ -29,7 +29,7 @@ export interface IOrderPaymentInfo {
 // Product summary returned with an order
 export type OrderProductSummary = Pick<
   IProduct,
-  "title" | "price" | "category" | "thumbnail"
+  "title" | "price" | "category" | "thumbnail" | "description" | "specifications"
 > & {
   _id?: string;
 };
