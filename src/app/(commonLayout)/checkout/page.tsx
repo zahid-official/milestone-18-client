@@ -1,4 +1,4 @@
-import Checkout from "@/components/modules/common/Checkout";
+import Checkout from "@/components/modules/common/shop/Checkout";
 import { getProfileInfo } from "@/services/user/userManagement";
 
 // CheckoutPage Component
