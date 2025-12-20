@@ -1,5 +1,6 @@
 "use client";
 import { Input } from "@/components/ui/input";
+import { cn } from "@/lib/utils";
 import useDebounce from "@/hooks/useDebounce";
 import { Search } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -9,12 +10,14 @@ import { useEffect, useState, useTransition } from "react";
 interface ISearch {
   placeholder?: string;
   paramName?: string;
+  className?: string;
 }
 
 // SearchFilter Component
 const SearchFilter = ({
   placeholder = "Search...",
   paramName = "searchTerm",
+  className,
 }: ISearch) => {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
@@ -47,12 +50,12 @@ const SearchFilter = ({
   }, [debouncedValue, paramName, router, searchParams]);
 
   return (
-    <div className="relative w-full max-w-72">
+    <div className={cn("relative w-full max-w-72", className)}>
       <Search className="absolute left-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
       <Input
         type="search"
         placeholder={placeholder}
-        className="pl-8"
+        className="pl-8 rounded-none"
         value={value}
         onChange={(event) => setValue(event.target.value)}
         disabled={isPending}

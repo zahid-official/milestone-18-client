@@ -45,7 +45,7 @@ const getProducts = async (
         meta && typeof meta === "object"
           ? {
               page: Number(meta.page) || 1,
-              limit: Number(meta.limit) || 12,
+              limit: Number(meta.limit) || 9,
               totalPage: Number(meta.totalPage) || 1,
               totalDocs: Number(meta.totalDocs) || 0,
             }
