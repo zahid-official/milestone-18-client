@@ -3,7 +3,8 @@ import DashboardChartUI, {
   type DashboardChartSeries,
 } from "@/components/ui/dashboard-chart";
 import type { ChartConfig } from "@/components/ui/chart";
-import type { IOrder, OrderProductSummary } from "@/types";
+import type { IOrder } from "@/types";
+import { getOrderAmount } from "@/components/modules/dashboard/customerDashboard/orderUtils";
 
 export interface CustomerDashboardChartProps
   extends Omit<
@@ -29,34 +30,6 @@ const chartTooltipFields: NonNullable<DashboardChartUIProps["tooltipFields"]> = 
   { key: "orders", label: "Orders", format: "number" },
   { key: "amount", label: "Amount", format: "currency" },
 ];
-
-const parseNumber = (value?: number) => {
-  if (typeof value !== "number") return undefined;
-  return Number.isNaN(value) ? undefined : value;
-};
-
-const getProductSummary = (order: IOrder): OrderProductSummary | undefined => {
-  if (order.productId && typeof order.productId === "object") {
-    return order.productId as OrderProductSummary;
-  }
-  return undefined;
-};
-
-const getOrderAmount = (order: IOrder) => {
-  const explicitAmount = parseNumber(order.amount);
-  if (explicitAmount !== undefined) return explicitAmount;
-
-  const product = getProductSummary(order);
-  const quantity = order.quantity || 1;
-  const itemTotal = product?.price ? product.price * quantity : undefined;
-  const shippingFee = parseNumber(order.shippingFee);
-
-  if (itemTotal !== undefined) {
-    return shippingFee !== undefined ? itemTotal + shippingFee : itemTotal;
-  }
-
-  return shippingFee;
-};
 
 const getOrderDate = (order: IOrder) => {
   if (!order.createdAt) return null;
@@ -130,7 +103,6 @@ const getResolvedReferenceDate = (
   return getLatestOrderDate(orders) ?? new Date();
 };
 
-// CustomerDashboardChart Component
 const CustomerDashboardChart = ({
   orders,
   days = 90,

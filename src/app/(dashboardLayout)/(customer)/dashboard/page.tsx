@@ -3,7 +3,6 @@ import CustomerDashboardChart from "@/components/modules/dashboard/customerDashb
 import CustomerDashboardTable from "@/components/modules/dashboard/customerDashboard/CustomerDashboardTable";
 import { getUserOrders } from "@/services/order/orderManagement";
 
-// CustomerDashboardPage Component
 const CustomerDashboardPage = async () => {
   const orderResult = await getUserOrders("limit=120");
   const orders = orderResult?.data ?? [];
@@ -11,17 +10,8 @@ const CustomerDashboardPage = async () => {
 
   return (
     <div className="space-y-8 pb-14 lg:px-10 sm:px-3">
-      {/* Cards */}
-      <div>
-        <CustomerDashboardCard orders={orders} totalOrders={totalOrders} />
-      </div>
-
-      {/* Chart */}
-      <div>
-        <CustomerDashboardChart orders={orders} />
-      </div>
-
-      {/* Table */}
+      <CustomerDashboardCard orders={orders} totalOrders={totalOrders} />
+      <CustomerDashboardChart orders={orders} />
       <CustomerDashboardTable orders={orders} />
     </div>
   );

@@ -77,6 +77,10 @@ export interface DashboardChartProps {
   animate?: boolean;
 }
 
+type DashboardChartTooltipFormatter = NonNullable<
+  React.ComponentProps<typeof ChartTooltipContent>["formatter"]
+>;
+
 const chartConfig = {
   visitors: {
     label: "Visitors",
@@ -280,9 +284,7 @@ const DashboardChartUI = ({
     [currencyFormatter, numberFormatter]
   );
 
-  const tooltipFormatter: React.ComponentProps<
-    typeof ChartTooltipContent
-  >["formatter"] = React.useCallback(
+  const tooltipFormatter = React.useCallback<DashboardChartTooltipFormatter>(
     (_value, _name, item, index) => {
       if (!tooltipFields?.length || index !== 0) {
         return null;

@@ -1,8 +1,6 @@
 "use client";
 
-import ManagementTable, {
-  type IColumn,
-} from "@/components/modules/dashboard/managementPage/ManagementTable";
+import ManagementTable from "@/components/modules/dashboard/managementPage/ManagementTable";
 import orderColumns from "@/components/modules/customer/order/OrderColumns";
 import { Button } from "@/components/ui/button";
 import type { IOrder } from "@/types";
@@ -30,7 +28,6 @@ const getOrderTime = (order: IOrder) => {
   return Number.isNaN(time) ? 0 : time;
 };
 
-// CustomerDashboardTable Component
 const CustomerDashboardTable = ({
   orders,
   limit = 6,
@@ -43,7 +40,7 @@ const CustomerDashboardTable = ({
     ["Product", "Total Amount", "Order Status", "Placed On"].includes(
       column.header
     )
-  ) as IColumn<IOrder>[];
+  );
 
   return (
     <div className="rounded-3xl border bg-background p-6 shadow-sm">
