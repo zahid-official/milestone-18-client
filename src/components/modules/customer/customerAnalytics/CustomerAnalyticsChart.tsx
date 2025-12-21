@@ -4,7 +4,7 @@ import DashboardChartUI, {
 } from "@/components/ui/dashboard-chart";
 import type { ChartConfig } from "@/components/ui/chart";
 import type { IOrder } from "@/types";
-import { getOrderAmount } from "@/components/modules/customer/customerAnalytics/orderUtils";
+import { getOrderAmount } from "@/utils/orderUtils";
 
 export interface CustomerAnalyticsChartProps
   extends Omit<

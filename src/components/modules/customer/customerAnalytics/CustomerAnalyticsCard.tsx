@@ -1,7 +1,7 @@
 import DashboardCardUI from "@/components/ui/dashboard-card";
 import type { IOrder, OrderStatus } from "@/types";
 import { Truck, XCircle } from "lucide-react";
-import { getOrderAmount } from "@/components/modules/customer/customerAnalytics/orderUtils";
+import { getOrderAmount } from "@/utils/orderUtils";
 
 export interface CustomerAnalyticsCardProps {
   orders: IOrder[];
