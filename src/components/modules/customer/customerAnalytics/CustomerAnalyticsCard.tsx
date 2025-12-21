@@ -1,9 +1,9 @@
 import DashboardCardUI from "@/components/ui/dashboard-card";
 import type { IOrder, OrderStatus } from "@/types";
 import { Truck, XCircle } from "lucide-react";
-import { getOrderAmount } from "@/components/modules/dashboard/customerDashboard/orderUtils";
+import { getOrderAmount } from "@/components/modules/customer/customerAnalytics/orderUtils";
 
-export interface CustomerDashboardCardProps {
+export interface CustomerAnalyticsCardProps {
   orders: IOrder[];
   totalOrders?: number;
 }
@@ -17,10 +17,10 @@ const numberFormatter = new Intl.NumberFormat("en-US");
 const sumOrderAmounts = (orders: IOrder[]) =>
   orders.reduce((sum, order) => sum + (getOrderAmount(order) ?? 0), 0);
 
-const CustomerDashboardCard = ({
+const CustomerAnalyticsCard = ({
   orders,
   totalOrders,
-}: CustomerDashboardCardProps) => {
+}: CustomerAnalyticsCardProps) => {
   const totalOrderCount = totalOrders ?? orders.length;
 
   const paidOrders = orders.filter((order) => order.paymentStatus === "PAID");
@@ -82,4 +82,4 @@ const CustomerDashboardCard = ({
   );
 };
 
-export default CustomerDashboardCard;
+export default CustomerAnalyticsCard;

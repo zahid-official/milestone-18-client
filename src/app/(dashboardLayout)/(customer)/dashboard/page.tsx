@@ -1,6 +1,6 @@
-import CustomerDashboardCard from "@/components/modules/dashboard/customerDashboard/CustomerDashboardCard";
-import CustomerDashboardChart from "@/components/modules/dashboard/customerDashboard/CustomerDashboardChart";
-import CustomerDashboardTable from "@/components/modules/dashboard/customerDashboard/CustomerDashboardTable";
+import CustomerAnalyticsCard from "@/components/modules/customer/customerAnalytics/CustomerAnalyticsCard";
+import CustomerAnalyticsChart from "@/components/modules/customer/customerAnalytics/CustomerAnalyticsChart";
+import CustomerAnalyticsTable from "@/components/modules/customer/customerAnalytics/CustomerAnalyticsTable";
 import { getUserOrders } from "@/services/order/orderManagement";
 
 const CustomerDashboardPage = async () => {
@@ -10,9 +10,9 @@ const CustomerDashboardPage = async () => {
 
   return (
     <div className="space-y-8 pb-14 lg:px-10 sm:px-3">
-      <CustomerDashboardCard orders={orders} totalOrders={totalOrders} />
-      <CustomerDashboardChart orders={orders} />
-      <CustomerDashboardTable orders={orders} />
+      <CustomerAnalyticsCard orders={orders} totalOrders={totalOrders} />
+      <CustomerAnalyticsChart orders={orders} />
+      <CustomerAnalyticsTable orders={orders} />
     </div>
   );
 };

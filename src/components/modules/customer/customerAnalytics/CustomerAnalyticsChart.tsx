@@ -4,9 +4,9 @@ import DashboardChartUI, {
 } from "@/components/ui/dashboard-chart";
 import type { ChartConfig } from "@/components/ui/chart";
 import type { IOrder } from "@/types";
-import { getOrderAmount } from "@/components/modules/dashboard/customerDashboard/orderUtils";
+import { getOrderAmount } from "@/components/modules/customer/customerAnalytics/orderUtils";
 
-export interface CustomerDashboardChartProps
+export interface CustomerAnalyticsChartProps
   extends Omit<
     DashboardChartUIProps,
     "data" | "config" | "series" | "tooltipFields"
@@ -103,7 +103,7 @@ const getResolvedReferenceDate = (
   return getLatestOrderDate(orders) ?? new Date();
 };
 
-const CustomerDashboardChart = ({
+const CustomerAnalyticsChart = ({
   orders,
   days = 90,
   title = "Order activity",
@@ -112,7 +112,7 @@ const CustomerDashboardChart = ({
   referenceDate,
   defaultRange = "30d",
   ...props
-}: CustomerDashboardChartProps) => {
+}: CustomerAnalyticsChartProps) => {
   const resolvedReferenceDate = getResolvedReferenceDate(orders, referenceDate);
   const chartData = buildChartData(orders, resolvedReferenceDate, days);
   const resolvedDescription =
@@ -135,4 +135,4 @@ const CustomerDashboardChart = ({
   );
 };
 
-export default CustomerDashboardChart;
+export default CustomerAnalyticsChart;

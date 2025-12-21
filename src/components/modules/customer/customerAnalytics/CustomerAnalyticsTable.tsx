@@ -7,7 +7,7 @@ import type { IOrder } from "@/types";
 import { ArrowUpRight } from "lucide-react";
 import Link from "next/link";
 
-interface CustomerDashboardTableProps {
+interface CustomerAnalyticsTableProps {
   orders: IOrder[];
   limit?: number;
 }
@@ -28,10 +28,10 @@ const getOrderTime = (order: IOrder) => {
   return Number.isNaN(time) ? 0 : time;
 };
 
-const CustomerDashboardTable = ({
+const CustomerAnalyticsTable = ({
   orders,
   limit = 6,
-}: CustomerDashboardTableProps) => {
+}: CustomerAnalyticsTableProps) => {
   const recentOrders = [...orders]
     .sort((a, b) => getOrderTime(b) - getOrderTime(a))
     .slice(0, Math.max(limit, 0));
@@ -74,5 +74,5 @@ const CustomerDashboardTable = ({
   );
 };
 
-export default CustomerDashboardTable;
+export default CustomerAnalyticsTable;
 
