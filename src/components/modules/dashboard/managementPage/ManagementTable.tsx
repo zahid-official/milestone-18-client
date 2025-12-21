@@ -32,9 +32,16 @@ export interface IManagementTable<T> {
   onView?: (row: T) => void;
   onEdit?: (row: T) => void;
   onDelete?: (row: T) => void;
+  isViewDisabled?: (row: T) => boolean;
+  isEditDisabled?: (row: T) => boolean;
+  isDeleteDisabled?: (row: T) => boolean;
   getRowKey: (row: T) => string;
   emptyMessage?: string;
   isRefreshing?: boolean;
+  viewLabel?: string;
+  viewIcon?: React.ReactNode;
+  editLabel?: string;
+  editIcon?: React.ReactNode;
   deleteLabel?: string;
   deleteIcon?: React.ReactNode;
 }
@@ -46,15 +53,26 @@ function ManagementTable<T>({
   onView,
   onEdit,
   onDelete,
+  isViewDisabled,
+  isEditDisabled,
+  isDeleteDisabled,
   getRowKey,
   emptyMessage = "No records found.",
   isRefreshing = false,
+  viewLabel,
+  viewIcon,
+  editLabel,
+  editIcon,
   deleteLabel,
   deleteIcon,
 }: IManagementTable<T>) {
   // Determine if any actions are provided
   const hasActions = Boolean(onView || onEdit || onDelete);
   const columnCount = columns.length + (hasActions ? 1 : 0);
+  const viewActionLabel = viewLabel ?? "View";
+  const viewActionIcon = viewIcon ?? <Eye className="size-4" />;
+  const editActionLabel = editLabel ?? "Edit";
+  const editActionIcon = editIcon ?? <Pencil className="size-4" />;
   const deleteActionLabel = deleteLabel ?? "Delete";
   const deleteActionIcon = deleteIcon ?? (
     <Trash2 className="size-4 text-destructive focus:text-destructive" />
@@ -127,66 +145,86 @@ function ManagementTable<T>({
               </TableCell>
             </TableRow>
           ) : (
-            data?.map((row, rowIndex) => (
-              <TableRow key={getRowKey(row) ?? rowIndex}>
-                {columns.map((column, colIndex) => (
-                  <TableCell key={colIndex} className={column?.className}>
-                    {renderCell(row, column?.accessor)}
-                  </TableCell>
-                ))}
+            data?.map((row, rowIndex) => {
+              // Allow parent to disable actions per row (e.g., status-based gating)
+              const viewDisabled = isViewDisabled?.(row) ?? false;
+              const editDisabled = isEditDisabled?.(row) ?? false;
+              const deleteDisabled = isDeleteDisabled?.(row) ?? false;
 
-                {hasActions && (
-                  <TableCell className="text-right">
-                    {/* Row action menu */}
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button
-                          variant="ghost"
-                          size="icon-sm"
-                          className="hover:bg-muted"
-                          aria-label="Row actions"
-                        >
-                          <MoreHorizontal className="size-4" />
-                        </Button>
-                      </DropdownMenuTrigger>
+              const viewClassName = viewDisabled
+                ? "cursor-not-allowed opacity-50"
+                : "cursor-pointer";
+              const editClassName = editDisabled
+                ? "cursor-not-allowed opacity-50"
+                : "cursor-pointer";
+              const deleteClassName = deleteDisabled
+                ? "cursor-not-allowed opacity-50"
+                : "cursor-pointer";
 
-                      {/* Dropdown content */}
-                      <DropdownMenuContent align="end">
-                        {onView && (
-                          <DropdownMenuItem
-                            onClick={() => onView?.(row)}
-                            className=" cursor-pointer"
+              return (
+                <TableRow key={getRowKey(row) ?? rowIndex}>
+                  {columns.map((column, colIndex) => (
+                    <TableCell key={colIndex} className={column?.className}>
+                      {renderCell(row, column?.accessor)}
+                    </TableCell>
+                  ))}
+
+                  {hasActions && (
+                    <TableCell className="text-right">
+                      {/* Row action menu */}
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button
+                            variant="ghost"
+                            size="icon-sm"
+                            className="hover:bg-muted"
+                            aria-label="Row actions"
                           >
-                            <Eye className="size-4" />
-                            View
-                          </DropdownMenuItem>
-                        )}
+                            <MoreHorizontal className="size-4" />
+                          </Button>
+                        </DropdownMenuTrigger>
 
-                        {onEdit && (
-                          <DropdownMenuItem
-                            onClick={() => onEdit?.(row)}
-                            className=" cursor-pointer"
-                          >
-                            <Pencil className="size-4" />
-                            Edit
-                          </DropdownMenuItem>
-                        )}
+                        {/* Dropdown content */}
+                        <DropdownMenuContent align="end">
+                          {onView && (
+                            <DropdownMenuItem
+                              onClick={() => !viewDisabled && onView?.(row)}
+                              className={viewClassName}
+                              disabled={viewDisabled}
+                            >
+                              {viewActionIcon}
+                              {viewActionLabel}
+                            </DropdownMenuItem>
+                          )}
 
-                        {onDelete && (
-                          <DropdownMenuItem
-                            onClick={() => onDelete?.(row)}
-                            className="cursor-pointer"
-                          >
-                            {deleteActionIcon}
-                            {deleteActionLabel}
-                          </DropdownMenuItem>
-                        )}
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </TableCell>
-                )}
-              </TableRow>
-            ))
+                          {onEdit && (
+                            <DropdownMenuItem
+                              onClick={() => !editDisabled && onEdit?.(row)}
+                              className={editClassName}
+                              disabled={editDisabled}
+                            >
+                              {editActionIcon}
+                              {editActionLabel}
+                            </DropdownMenuItem>
+                          )}
+
+                          {onDelete && (
+                            <DropdownMenuItem
+                              onClick={() => !deleteDisabled && onDelete?.(row)}
+                              className={deleteClassName}
+                              disabled={deleteDisabled}
+                            >
+                              {deleteActionIcon}
+                              {deleteActionLabel}
+                            </DropdownMenuItem>
+                          )}
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </TableCell>
+                  )}
+                </TableRow>
+              );
+            })
           )}
         </TableBody>
       </Table>

@@ -17,7 +17,7 @@ const vendorNavItems: NavGroup[] = [
       },
       {
         title: "Order Management",
-        url: "/vendor/product-management",
+        url: "/vendor/order-management",
         icon: "ClipboardList",
         roles: [userRole.VENDOR],
       },
