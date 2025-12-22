@@ -1,5 +1,4 @@
 import Image from "next/image";
-
 import collection from "@/assets/collection-1.jpg";
 import PageBanner from "@/components/shared/PageBanner";
 import { IProduct, IProductSpecifications } from "@/types/product.interface";
@@ -25,9 +24,7 @@ const formatCategory = (category?: string) => {
 const formatMaterials = (specs?: IProductSpecifications) => {
   const materials = specs?.materials ?? specs?.meterials;
   if (!materials) return "Not mentioned";
-  return Array.isArray(materials)
-    ? materials.join(", ")
-    : materials.toString();
+  return Array.isArray(materials) ? materials.join(", ") : materials.toString();
 };
 
 const ProductDetails = ({ product }: ProductDetailsProps) => {
@@ -65,23 +62,23 @@ const ProductDetails = ({ product }: ProductDetailsProps) => {
 
       <div className="max-w-7xl w-full mx-auto py-20 sm:py-28 space-y-12 px-4">
         <div className="grid lg:grid-cols-2 gap-10 items-center">
-          <div className="flex justify-center items-center p-6">
+          <div className="w-full max-w-sm mx-auto drop-shadow-lg">
             <Image
               src={product?.thumbnail || collection}
               alt={product?.title || "product image"}
               width={480}
               height={480}
-              className="h-auto w-auto max-h-[520px] max-w-full object-contain drop-shadow-lg"
+              className="w-full h-full object-cover"
               priority
             />
           </div>
 
           <div className="space-y-6 lg:pl-6">
-            <div className="space-y-3">
-              <div className="inline-flex items-center gap-2 bg-primary/10 px-3 py-1 text-sm font-medium text-primary">
+            <div className="space-y-3 max-lg:text-center">
+              <div className="inline-flex uppercase items-center gap-2 bg-primary/10 px-3 py-1 text-sm font-medium text-primary">
                 {formatCategory(product?.category)}
               </div>
-              <h2 className="text-4xl font-semibold leading-tight">
+              <h2 className="sm:text-4xl text-3xl font-semibold leading-tight">
                 {product?.title}
               </h2>
               <p className="text-2xl font-semibold text-primary">
@@ -89,7 +86,7 @@ const ProductDetails = ({ product }: ProductDetailsProps) => {
               </p>
             </div>
 
-            <p className="text-base leading-relaxed text-foreground/70">
+            <p className="text-base max-lg:text-center leading-relaxed text-foreground/70">
               {product?.description || "No description provided."}
             </p>
 
@@ -105,7 +102,7 @@ const ProductDetails = ({ product }: ProductDetailsProps) => {
                   {isInStock ? `${product?.stock} in stock` : "Stock Out"}
                 </p>
               </div>
-              <div className="bg-background p-4 space-y-2 shadow-sm">
+              <div className="bg-background uppercase p-4 space-y-2 shadow-sm">
                 <p className="text-sm text-foreground/60">Category</p>
                 <p className="text-lg font-semibold">
                   {formatCategory(product?.category)}
@@ -129,37 +126,29 @@ const ProductDetails = ({ product }: ProductDetailsProps) => {
 
           <div className="bg-background p-6 shadow-sm space-y-4">
             <h2 className="text-2xl font-semibold">Specifications</h2>
-            <dl className="grid sm:grid-cols-2 gap-4">
+            <dl className="grid grid-cols-2 gap-4">
               <div className="space-y-1">
                 <dt className="text-sm text-foreground/60">Height</dt>
                 <dd className="text-base font-semibold">
-                  {specs?.height
-                    ? `${specs.height} cm`
-                    : "Not mentioned"}
+                  {specs?.height ? `${specs.height} cm` : "Not mentioned"}
                 </dd>
               </div>
               <div className="space-y-1">
                 <dt className="text-sm text-foreground/60">Weight</dt>
                 <dd className="text-base font-semibold">
-                  {specs?.weight
-                    ? `${specs.weight} kg`
-                    : "Not mentioned"}
+                  {specs?.weight ? `${specs.weight} kg` : "Not mentioned"}
                 </dd>
               </div>
               <div className="space-y-1">
                 <dt className="text-sm text-foreground/60">Width</dt>
                 <dd className="text-base font-semibold">
-                  {specs?.width
-                    ? `${specs.width} cm`
-                    : "Not mentioned"}
+                  {specs?.width ? `${specs.width} cm` : "Not mentioned"}
                 </dd>
               </div>
               <div className="space-y-1">
                 <dt className="text-sm text-foreground/60">Length</dt>
                 <dd className="text-base font-semibold">
-                  {specs?.length
-                    ? `${specs.length} cm`
-                    : "Not mentioned"}
+                  {specs?.length ? `${specs.length} cm` : "Not mentioned"}
                 </dd>
               </div>
               <div className="space-y-1">

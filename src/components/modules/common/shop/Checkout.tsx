@@ -57,6 +57,7 @@ const Checkout = ({ user }: CheckoutProps) => {
           const formData = new FormData();
           formData.append("productId", item._id);
           formData.append("quantity", item.quantity.toString());
+          formData.append("shippingFee", shipping.toString());
 
           const result = await createOrder(null, formData);
 
@@ -163,7 +164,7 @@ const Checkout = ({ user }: CheckoutProps) => {
             </div>
             <Separator />
             <div className="flex items-center justify-between text-base font-semibold">
-              <span>Total</span>
+              <span>Total Amount</span>
               <span>{currency.format(total)}</span>
             </div>
             <Button

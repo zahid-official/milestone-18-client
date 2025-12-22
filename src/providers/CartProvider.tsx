@@ -1,7 +1,14 @@
 "use client";
 
 import { IProduct } from "@/types/product.interface";
-import { createContext, ReactNode, useContext, useEffect, useMemo, useState } from "react";
+import {
+  createContext,
+  ReactNode,
+  useContext,
+  useEffect,
+  useMemo,
+  useReducer,
+} from "react";
 import { toast } from "sonner";
 
 export interface CartItem extends IProduct {
@@ -20,22 +27,81 @@ interface CartContextValue {
 
 const CartContext = createContext<CartContextValue | null>(null);
 
-const CART_KEY = "lorvic_cart";
+export const CART_KEY = "lorvic_cart";
+
+const parseStoredCart = (stored: string | null): CartItem[] => {
+  if (!stored) return [];
+
+  try {
+    const parsed: CartItem[] = JSON.parse(stored);
+    return Array.isArray(parsed) ? parsed : [];
+  } catch (error) {
+    console.error("Failed to parse cart from storage", error);
+    return [];
+  }
+};
+
+type CartAction =
+  | { type: "HYDRATE"; payload: CartItem[] }
+  | { type: "ADD_ITEM"; product: IProduct; quantity: number }
+  | { type: "REMOVE_ITEM"; _id: string }
+  | { type: "UPDATE_QUANTITY"; _id: string; quantity: number }
+  | { type: "CLEAR" };
+
+const cartReducer = (state: CartItem[], action: CartAction): CartItem[] => {
+  switch (action.type) {
+    case "HYDRATE":
+      return action.payload;
+    case "ADD_ITEM": {
+      const { product, quantity } = action;
+      const existing = state.find((item) => item._id === product._id);
+      if (existing) {
+        return state.map((item) =>
+          item._id === product._id
+            ? { ...item, quantity: item.quantity + Math.max(1, quantity) }
+            : item
+        );
+      }
+      return [...state, { ...product, quantity: Math.max(1, quantity) }];
+    }
+    case "REMOVE_ITEM":
+      return state.filter((item) => item._id !== action._id);
+    case "UPDATE_QUANTITY":
+      return state.map((item) =>
+        item._id === action._id
+          ? { ...item, quantity: Math.max(1, action.quantity) }
+          : item
+      );
+    case "CLEAR":
+      return [];
+    default:
+      return state;
+  }
+};
 
 const CartProvider = ({ children }: { children: ReactNode }) => {
-  const [items, setItems] = useState<CartItem[]>([]);
+  const [items, dispatch] = useReducer(cartReducer, []);
 
-  // Load from localStorage
+  // Hydrate cart after mount to keep SSR/CSR markup in sync
   useEffect(() => {
-    try {
-      const stored = localStorage.getItem(CART_KEY);
-      if (stored) {
-        const parsed: CartItem[] = JSON.parse(stored);
-        setItems(Array.isArray(parsed) ? parsed : []);
-      }
-    } catch (error) {
-      console.error("Failed to parse cart from storage", error);
+    const stored = parseStoredCart(localStorage.getItem(CART_KEY));
+    if (stored.length) {
+      dispatch({ type: "HYDRATE", payload: stored });
     }
+  }, []);
+
+  useEffect(() => {
+    const handleStorageChange = (event: StorageEvent) => {
+      if (event.key === CART_KEY) {
+        dispatch({
+          type: "HYDRATE",
+          payload: parseStoredCart(event.newValue),
+        });
+      }
+    };
+
+    window.addEventListener("storage", handleStorageChange);
+    return () => window.removeEventListener("storage", handleStorageChange);
   }, []);
 
   // Persist to localStorage
@@ -53,35 +119,19 @@ const CartProvider = ({ children }: { children: ReactNode }) => {
       return;
     }
 
-    setItems((prev) => {
-      const existing = prev.find((item) => item._id === product._id);
-      if (existing) {
-        return prev.map((item) =>
-          item._id === product._id
-            ? { ...item, quantity: item.quantity + Math.max(1, quantity) }
-            : item
-        );
-      }
-      return [...prev, { ...product, quantity: Math.max(1, quantity) }];
-    });
+    dispatch({ type: "ADD_ITEM", product, quantity });
     toast.success("Added to cart");
   };
 
   const removeItem = (_id: string) => {
-    setItems((prev) => prev.filter((item) => item._id !== _id));
+    dispatch({ type: "REMOVE_ITEM", _id });
   };
 
   const updateQuantity = (_id: string, quantity: number) => {
-    setItems((prev) =>
-      prev.map((item) =>
-        item._id === _id
-          ? { ...item, quantity: Math.max(1, quantity) }
-          : item
-      )
-    );
+    dispatch({ type: "UPDATE_QUANTITY", _id, quantity });
   };
 
-  const clearCart = () => setItems([]);
+  const clearCart = () => dispatch({ type: "CLEAR" });
 
   const subtotal = useMemo(
     () =>
@@ -117,5 +167,7 @@ export const useCart = () => {
   }
   return ctx;
 };
+
+export const useOptionalCart = () => useContext(CartContext);
 
 export default CartProvider;

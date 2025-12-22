@@ -1,25 +1,30 @@
 import { Toaster } from "@/components/ui/sonner";
 import type { Metadata } from "next";
-import { Geist_Mono, Jost, Playfair_Display } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 
-const jost = Jost({
+const jost = localFont({
+  src: "./fonts/Jost-VariableFont_wght.woff2",
   variable: "--font-jost",
-  subsets: ["latin"],
   display: "swap",
+  weight: "100 900",
+  style: "normal",
 });
 
-const playfairDisplay = Playfair_Display({
+const playfairDisplay = localFont({
+  src: "./fonts/PlayfairDisplay-Bold.woff2",
   variable: "--font-playfair-display",
   weight: "700",
-  subsets: ["latin"],
   display: "swap",
+  style: "normal",
 });
 
-const geistMono = Geist_Mono({
+const geistMono = localFont({
+  src: "./fonts/GeistMono-VariableFont_wght.woff2",
   variable: "--font-geist-mono",
-  subsets: ["latin"],
   display: "swap",
+  weight: "100 900",
+  style: "normal",
 });
 
 export const metadata: Metadata = {
