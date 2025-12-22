@@ -1,11 +1,7 @@
 "use client";
 
 import InfoRow from "@/components/modules/dashboard/managementPage/InfoRow";
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   Dialog,
   DialogContent,
@@ -25,16 +21,20 @@ const badgeBase =
   "inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs font-semibold";
 
 const statusStyles: Record<AccountStatus, string> = {
-  ACTIVE: "bg-emerald-50 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-100",
-  INACTIVE: "bg-amber-50 text-amber-700 dark:bg-amber-500/10 dark:text-amber-100",
+  ACTIVE:
+    "bg-emerald-50 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-100",
+  INACTIVE:
+    "bg-amber-50 text-amber-700 dark:bg-amber-500/10 dark:text-amber-100",
   BLOCKED:
     "bg-destructive/10 text-destructive dark:bg-destructive/20 dark:text-destructive-foreground",
 };
 
 const roleStyles: Record<UserRole, string> = {
   ADMIN: "bg-blue-50 text-blue-700 dark:bg-blue-500/10 dark:text-blue-100",
-  VENDOR: "bg-indigo-50 text-indigo-700 dark:bg-indigo-500/10 dark:text-indigo-100",
-  CUSTOMER: "bg-slate-50 text-slate-700 dark:bg-slate-500/10 dark:text-slate-100",
+  VENDOR:
+    "bg-indigo-50 text-indigo-700 dark:bg-indigo-500/10 dark:text-indigo-100",
+  CUSTOMER:
+    "bg-slate-50 text-slate-700 dark:bg-slate-500/10 dark:text-slate-100",
 };
 
 const formatLabel = (value?: string) => {
@@ -124,36 +124,37 @@ const UserManagementDetailsViewDialog = ({
             </div>
           </div>
 
-          <div className="grid gap-4 lg:grid-cols-2">
-            <div className="rounded-xl border bg-card/50 p-4 shadow-sm">
-              <div className="mb-3 flex items-center gap-2 text-sm font-semibold">
-                <User className="size-4 text-muted-foreground" />
-                Profile
-              </div>
-              <div className="grid gap-3 sm:grid-cols-2">
-                <InfoRow label="User ID" value={user._id} />
-                <InfoRow label="Role" value={formatLabel(user.role)} />
-                <InfoRow label="Status" value={formatLabel(user.status)} />
-                <InfoRow
-                  label="Password Reset"
-                  value={user.needChangePassword ? "Required" : "Not required"}
-                />
-              </div>
+          {/* Profile */}
+          <div className="rounded-xl border bg-card/50 p-4 shadow-sm">
+            <div className="mb-3 flex items-center gap-2 text-sm font-semibold">
+              <User className="size-4 text-muted-foreground" />
+              Profile
             </div>
-
-            <div className="rounded-xl border bg-card/50 p-4 shadow-sm">
-              <div className="mb-3 flex items-center gap-2 text-sm font-semibold">
-                <Mail className="size-4 text-muted-foreground" />
-                Contact
-              </div>
-              <div className="grid gap-3 sm:grid-cols-2">
-                <InfoRow label="Email" value={displayEmail} />
-                <InfoRow label="Phone" value={user.phone} />
-                <InfoRow label="Address" value={user.address} />
-              </div>
+            <div className="grid gap-3 sm:grid-cols-2">
+              <InfoRow label="User ID" value={user._id} />
+              <InfoRow label="Role" value={formatLabel(user.role)} />
+              <InfoRow label="Status" value={formatLabel(user.status)} />
+              <InfoRow
+                label="Password Reset"
+                value={user.needChangePassword ? "Required" : "Not required"}
+              />
             </div>
           </div>
 
+          {/* Contact */}
+          <div className="rounded-xl border bg-card/50 p-4 shadow-sm">
+            <div className="mb-3 flex items-center gap-2 text-sm font-semibold">
+              <Mail className="size-4 text-muted-foreground" />
+              Contact
+            </div>
+            <div className="grid gap-3 sm:grid-cols-2">
+              <InfoRow label="Email" value={displayEmail} />
+              <InfoRow label="Phone" value={user.phone} />
+              <InfoRow label="Address" value={user.address} />
+            </div>
+          </div>
+          
+          {/* Activity */}
           <div className="rounded-xl border bg-card/50 p-4 shadow-sm">
             <div className="mb-3 flex items-center gap-2 text-sm font-semibold">
               <Calendar className="size-4 text-muted-foreground" />
@@ -161,12 +162,17 @@ const UserManagementDetailsViewDialog = ({
             </div>
             <div className="grid gap-3 sm:grid-cols-2">
               <InfoRow label="Joined" value={formatDate(user.createdAt)} />
-              <InfoRow label="Last Updated" value={formatDate(user.updatedAt)} />
+              <InfoRow
+                label="Last Updated"
+                value={formatDate(user.updatedAt)}
+              />
               <InfoRow label="Deleted" value={user.isDeleted ? "Yes" : "No"} />
-              <InfoRow label="Need Change Password" value={user.needChangePassword ? "Yes" : "No"} />
+              <InfoRow
+                label="Need Change Password"
+                value={user.needChangePassword ? "Yes" : "No"}
+              />
             </div>
           </div>
-
         </div>
       </DialogContent>
     </Dialog>

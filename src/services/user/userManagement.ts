@@ -377,10 +377,46 @@ const updateProfileInfo = async (
   }
 };
 
+// Delete user
+const deleteUser = async (userId: string): Promise<ActionState> => {
+  try {
+    if (!userId) {
+      return {
+        success: false,
+        message: "User id is missing.",
+      };
+    }
+
+    const res = await serverFetchApi.delete(`/user/${userId}`);
+    const result = await res.json();
+
+    if (!result?.success) {
+      let message = "Failed to delete user. Please try again.";
+      message = result?.message ?? result?.error ?? message;
+      return {
+        success: false,
+        message,
+      };
+    }
+
+    return {
+      success: true,
+      message: result?.message || "User deleted successfully.",
+    };
+  } catch (error) {
+    console.error("deleteUser error", error);
+    return {
+      success: false,
+      message: "Something went wrong. Please try again.",
+    };
+  }
+};
+
 export {
   getUsers,
   getDeletedUsers,
   getUserById,
   getProfileInfo,
   updateProfileInfo,
+  deleteUser,
 };
