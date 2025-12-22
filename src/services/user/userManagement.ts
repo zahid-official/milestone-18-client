@@ -412,6 +412,41 @@ const deleteUser = async (userId: string): Promise<ActionState> => {
   }
 };
 
+// Restore deleted user
+const restoreUser = async (userId: string): Promise<ActionState> => {
+  try {
+    if (!userId) {
+      return {
+        success: false,
+        message: "User id is missing.",
+      };
+    }
+
+    const res = await serverFetchApi.patch(`/user/restoreUser/${userId}`);
+    const result = await res.json();
+
+    if (!result?.success) {
+      let message = "Failed to restore user. Please try again.";
+      message = result?.message ?? result?.error ?? message;
+      return {
+        success: false,
+        message,
+      };
+    }
+
+    return {
+      success: true,
+      message: result?.message || "User restored successfully.",
+    };
+  } catch (error) {
+    console.error("restoreUser error", error);
+    return {
+      success: false,
+      message: "Something went wrong. Please try again.",
+    };
+  }
+};
+
 export {
   getUsers,
   getDeletedUsers,
@@ -419,4 +454,5 @@ export {
   getProfileInfo,
   updateProfileInfo,
   deleteUser,
+  restoreUser,
 };

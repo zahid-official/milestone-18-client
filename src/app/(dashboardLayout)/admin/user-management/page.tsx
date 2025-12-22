@@ -103,6 +103,7 @@ const UserManagementPage = async ({ searchParams }: IProps) => {
             isDeletedView ? "No deleted users found" : "No users found"
           }
           enableDelete={!isDeletedView}
+          enableRestore={isDeletedView}
         />
         <div className="mt-6 flex justify-center">
           <PaginationFeature
