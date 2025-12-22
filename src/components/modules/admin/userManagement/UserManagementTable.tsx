@@ -12,17 +12,24 @@ import { toast } from "sonner";
 
 interface UserManagementTableProps {
   users: IUser[];
+  emptyMessage?: string;
+  enableDelete?: boolean;
 }
 
 const getRowKey = (user: IUser) => user._id || user.email;
 
 // UserManagementTable Component
-const UserManagementTable = ({ users }: UserManagementTableProps) => {
+const UserManagementTable = ({
+  users,
+  emptyMessage,
+  enableDelete = true,
+}: UserManagementTableProps) => {
   const router = useRouter();
   const [, startTransition] = useTransition();
   const [viewingUser, setViewingUser] = useState<IUser | null>(null);
   const [deletingUser, setDeletingUser] = useState<IUser | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
+  const canDelete = enableDelete;
   const deleteLabel =
     deletingUser?.name || deletingUser?.email || "this user";
 
@@ -64,10 +71,12 @@ const UserManagementTable = ({ users }: UserManagementTableProps) => {
         data={users}
         columns={userManagementColumns}
         onView={(user) => setViewingUser(user)}
-        onDelete={handleDelete}
-        isDeleteDisabled={(user) => Boolean(user.isDeleted)}
+        onDelete={canDelete ? handleDelete : undefined}
+        isDeleteDisabled={
+          canDelete ? (user) => Boolean(user.isDeleted) : undefined
+        }
         getRowKey={getRowKey}
-        emptyMessage="No users found"
+        emptyMessage={emptyMessage ?? "No users found"}
         viewLabel="View Profile"
       />
 
@@ -79,25 +88,27 @@ const UserManagementTable = ({ users }: UserManagementTableProps) => {
         />
       )}
 
-      <ConfirmDeleteDialog
-        open={!!deletingUser}
-        onOpenChange={(open) => !open && setDeletingUser(null)}
-        onConfirm={confirmDelete}
-        title="Delete User"
-        description={
-          <>
-            This will mark{" "}
-            <span className="font-semibold text-foreground">
-              {deleteLabel}
-            </span>{" "}
-            as deleted and remove them from the active list.
-          </>
-        }
-        itemName={deleteLabel}
-        isDeleting={isDeleting}
-        confirmLabel="Delete User"
-        processingLabel="Deleting user..."
-      />
+      {canDelete && (
+        <ConfirmDeleteDialog
+          open={!!deletingUser}
+          onOpenChange={(open) => !open && setDeletingUser(null)}
+          onConfirm={confirmDelete}
+          title="Delete User"
+          description={
+            <>
+              This will mark{" "}
+              <span className="font-semibold text-foreground">
+                {deleteLabel}
+              </span>{" "}
+              as deleted and remove them from the active list.
+            </>
+          }
+          itemName={deleteLabel}
+          isDeleting={isDeleting}
+          confirmLabel="Delete User"
+          processingLabel="Deleting user..."
+        />
+      )}
     </>
   );
 };

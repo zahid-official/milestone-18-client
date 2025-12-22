@@ -5,8 +5,9 @@ import SearchFilter from "@/components/modules/features/SearchFeature";
 import SelectFilter from "@/components/modules/features/SelectFeature";
 import UserManagementHeader from "@/components/modules/admin/userManagement/UserManagementHeader";
 import UserManagementTable from "@/components/modules/admin/userManagement/UserManagementTable";
+import UserManagementViewToggle from "@/components/modules/admin/userManagement/UserManagementViewToggle";
 import { userRole } from "@/constants/userRole";
-import { getUsers } from "@/services/user/userManagement";
+import { getDeletedUsers, getUsers } from "@/services/user/userManagement";
 import queryFormatter from "@/utils/queryFormatter";
 import { Suspense } from "react";
 
@@ -33,9 +34,22 @@ interface IProps {
 // UserManagementPage Component
 const UserManagementPage = async ({ searchParams }: IProps) => {
   const params = (await searchParams) || {};
-  const queryString = queryFormatter(params);
+  const viewParam = params?.view;
+  const viewValue =
+    typeof viewParam === "string"
+      ? viewParam
+      : Array.isArray(viewParam) && viewParam.length
+      ? viewParam[0]
+      : undefined;
+  const isDeletedView = viewValue === "deleted";
 
-  const result = await getUsers(queryString);
+  const apiParams = { ...params };
+  delete apiParams.view;
+  const queryString = queryFormatter(apiParams);
+
+  const result = isDeletedView
+    ? await getDeletedUsers(queryString)
+    : await getUsers(queryString);
   const users = result?.data ?? [];
   const meta = result?.meta;
 
@@ -55,7 +69,7 @@ const UserManagementPage = async ({ searchParams }: IProps) => {
   return (
     <div className="space-y-6 pb-14 sm:px-10">
       <header className="space-y-4">
-        <UserManagementHeader />
+        <UserManagementHeader isDeletedView={isDeletedView} />
 
         <div className="flex max-sm:flex-wrap max-sm:justify-center items-center gap-4">
           <SearchFilter
@@ -75,6 +89,7 @@ const UserManagementPage = async ({ searchParams }: IProps) => {
             options={accountStatusOptions}
           />
 
+          <UserManagementViewToggle isDeletedView={isDeletedView} />
           <ManagementRefreshButton showLabel={false} />
         </div>
       </header>
@@ -82,7 +97,13 @@ const UserManagementPage = async ({ searchParams }: IProps) => {
       <Suspense
         fallback={<ManagementTableSkeleton columns={6} rows={8} showActions />}
       >
-        <UserManagementTable users={users} />
+        <UserManagementTable
+          users={users}
+          emptyMessage={
+            isDeletedView ? "No deleted users found" : "No users found"
+          }
+          enableDelete={!isDeletedView}
+        />
         <div className="mt-6 flex justify-center">
           <PaginationFeature
             currentPage={currentPage}
