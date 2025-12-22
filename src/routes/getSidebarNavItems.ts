@@ -4,7 +4,20 @@ import { NavGroup } from "@/types/sidebar.interface";
 import { getDefaultDashboardRoute } from ".";
 
 // Role based navitems
-const adminNavItems: NavGroup[] = [];
+const adminNavItems: NavGroup[] = [
+  {
+    groupLabel: "Admin Section",
+    navItems: [
+      {
+        title: "User Management",
+        url: "/admin/user-management",
+        icon: "Users",
+        roles: [userRole.ADMIN],
+      },
+    ],
+  },
+];
+
 const vendorNavItems: NavGroup[] = [
   {
     groupLabel: "Vendor Section",
@@ -13,12 +26,31 @@ const vendorNavItems: NavGroup[] = [
         title: "Product Management",
         url: "/vendor/product-management",
         icon: "Sofa",
-        roles: [...Object.values(userRole)],
+        roles: [userRole.VENDOR],
+      },
+      {
+        title: "Order Management",
+        url: "/vendor/order-management",
+        icon: "ClipboardList",
+        roles: [userRole.VENDOR],
       },
     ],
   },
 ];
-const customerNavItems: NavGroup[] = [];
+
+const customerNavItems: NavGroup[] = [
+  {
+    groupLabel: "Customer Service",
+    navItems: [
+      {
+        title: "Orders",
+        url: "/dashboard/orders",
+        icon: "ShoppingBag",
+        roles: [userRole.CUSTOMER],
+      },
+    ],
+  },
+];
 
 // Get common navitems
 const getCommonNavItems = (role: UserRole): NavGroup[] => {

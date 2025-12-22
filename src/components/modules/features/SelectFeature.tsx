@@ -63,7 +63,7 @@ const SelectFilter = ({
         onValueChange={handleChange}
         disabled={isPending}
       >
-        <SelectTrigger className="min-w-32 max-w-48">
+        <SelectTrigger className="min-w-32 max-w-48 rounded-none">
           <SelectValue placeholder={placeholder} />
         </SelectTrigger>
         <SelectContent>

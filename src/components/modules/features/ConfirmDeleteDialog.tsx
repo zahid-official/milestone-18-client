@@ -9,6 +9,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { Spinner } from "@/components/ui/spinner";
+import { ReactNode } from "react";
 
 // Interface for IConfirmDelete
 interface IConfirmDelete {
@@ -16,11 +17,12 @@ interface IConfirmDelete {
   onOpenChange: (open: boolean) => void;
   onConfirm: () => void;
   title?: string;
-  description?: string;
+  description?: ReactNode;
   itemName?: string;
   isDeleting?: boolean;
   confirmLabel?: string;
   cancelLabel?: string;
+  processingLabel?: string;
 }
 
 // ConfirmDeleteDialog Component
@@ -34,6 +36,7 @@ const ConfirmDeleteDialog = ({
   isDeleting = false,
   confirmLabel = "Delete",
   cancelLabel = "Cancel",
+  processingLabel = "Deleting...",
 }: IConfirmDelete) => {
   // Fallback description when no custom text is provided
   const fallbackDescription = (
@@ -68,7 +71,7 @@ const ConfirmDeleteDialog = ({
             {isDeleting ? (
               <>
                 <Spinner className="mr-2 size-4" />
-                Deleting...
+                {processingLabel}
               </>
             ) : (
               confirmLabel

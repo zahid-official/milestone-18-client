@@ -10,11 +10,17 @@ import {
 } from "../../ui/dropdown-menu";
 import { Separator } from "../../ui/separator";
 import Logo from "../Logo";
-import { getCookies } from "@/services/auth/cookies";
+import { getDefaultDashboardRoute } from "@/routes";
+import getUserInfo from "@/utils/getUserInfo";
 import LogoutButton from "@/components/modules/auth/LogoutButton";
 import CartDialog from "./CartDialog";
 
 const Navbar = async () => {
+  const userInfo = await getUserInfo();
+  const defaultDashboard = userInfo
+    ? getDefaultDashboardRoute(userInfo.role)
+    : null;
+
   // Navigation links
   const navLinks = [
     { label: "Home", href: "/" },
@@ -23,8 +29,12 @@ const Navbar = async () => {
     { label: "Contact", href: "/contact" },
   ];
 
-  // Get AccessToken
-  const accessToken = await getCookies("accessToken");
+  if (defaultDashboard) {
+    navLinks.push({
+      label: "Dashboard",
+      href: defaultDashboard,
+    });
+  }
 
   return (
     <nav>
@@ -53,7 +63,7 @@ const Navbar = async () => {
           <div className="flex md:gap-3.5">
             <CartDialog />
 
-            {accessToken ? (
+            {userInfo ? (
               <LogoutButton className="max-md:hidden" />
             ) : (
               <Link href={"/login"}>
@@ -83,7 +93,7 @@ const Navbar = async () => {
                 <DropdownMenuSeparator className="mt-2.5" />
                 {/* Buttons */}
                 <DropdownMenuItem asChild className="p-0">
-                  {accessToken ? (
+                  {userInfo ? (
                     <div>
                       <LogoutButton className="w-full mt-1.5" />
                     </div>
