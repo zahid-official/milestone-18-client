@@ -29,6 +29,85 @@ const parseMeta = (meta: unknown) => {
   return undefined;
 };
 
+const coerceString = (value: unknown) =>
+  typeof value === "string" ? value : undefined;
+
+const normalizeRole = (value: unknown): IUser["role"] => {
+  if (value === "ADMIN" || value === "VENDOR" || value === "CUSTOMER") {
+    return value;
+  }
+  return "CUSTOMER";
+};
+
+const normalizeStatus = (value: unknown): IUser["status"] => {
+  if (value === "ACTIVE" || value === "INACTIVE" || value === "BLOCKED") {
+    return value;
+  }
+  return "ACTIVE";
+};
+
+const pickProfileSource = (record: Record<string, unknown>) => {
+  const role = record.role;
+  const roleProfile =
+    role === "CUSTOMER"
+      ? record.customer
+      : role === "VENDOR"
+      ? record.vendor
+      : role === "ADMIN"
+      ? record.admin
+      : undefined;
+  const candidate =
+    roleProfile ?? record.customer ?? record.vendor ?? record.admin;
+
+  return candidate && typeof candidate === "object"
+    ? (candidate as Record<string, unknown>)
+    : undefined;
+};
+
+const normalizeUser = (raw: unknown): IUser | null => {
+  if (!raw || typeof raw !== "object") return null;
+
+  const record = raw as Record<string, unknown>;
+  const profile = pickProfileSource(record);
+  const id =
+    coerceString(record._id) ??
+    coerceString(record.id) ??
+    (profile ? coerceString(profile.userId) : undefined);
+
+  return {
+    _id: id,
+    email:
+      coerceString(record.email) ??
+      (profile ? coerceString(profile.email) : undefined) ??
+      "",
+    role: normalizeRole(record.role),
+    status: normalizeStatus(record.status),
+    isDeleted: Boolean(record.isDeleted),
+    needChangePassword: Boolean(record.needChangePassword),
+    name:
+      coerceString(record.name) ??
+      (profile ? coerceString(profile.name) : undefined),
+    phone:
+      coerceString(record.phone) ??
+      (profile ? coerceString(profile.phone) : undefined),
+    address:
+      coerceString(record.address) ??
+      (profile ? coerceString(profile.address) : undefined),
+    profilePhoto:
+      coerceString(record.profilePhoto) ??
+      (profile ? coerceString(profile.profilePhoto) : undefined),
+    createdAt: coerceString(record.createdAt),
+    updatedAt: coerceString(record.updatedAt),
+  };
+};
+
+const normalizeUsers = (payload: unknown): IUser[] => {
+  if (!Array.isArray(payload)) return [];
+  return payload
+    .map((item) => normalizeUser(item))
+    .filter((item): item is IUser => Boolean(item));
+};
+
 // Get all users
 const getUsers = async (queryString?: string): Promise<UsersResponse> => {
   try {
@@ -44,7 +123,7 @@ const getUsers = async (queryString?: string): Promise<UsersResponse> => {
 
     return {
       success: true,
-      data: Array.isArray(result?.data) ? result.data : [],
+      data: normalizeUsers(result?.data),
       meta: parseMeta(result?.meta),
       message: result?.message,
     };
@@ -76,7 +155,7 @@ const getDeletedUsers = async (queryString?: string): Promise<UsersResponse> => 
 
     return {
       success: true,
-      data: Array.isArray(result?.data) ? result.data : [],
+      data: normalizeUsers(result?.data),
       meta: parseMeta(result?.meta),
       message: result?.message,
     };
@@ -114,7 +193,9 @@ const getUserById = async (
     }
 
     const userData =
-      result?.data && typeof result.data === "object" ? result.data : null;
+      result?.data && typeof result.data === "object"
+        ? normalizeUser(result.data)
+        : null;
 
     return {
       success: true,

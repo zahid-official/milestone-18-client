@@ -4,7 +4,20 @@ import { NavGroup } from "@/types/sidebar.interface";
 import { getDefaultDashboardRoute } from ".";
 
 // Role based navitems
-const adminNavItems: NavGroup[] = [];
+const adminNavItems: NavGroup[] = [
+  {
+    groupLabel: "Admin Section",
+    navItems: [
+      {
+        title: "User Management",
+        url: "/admin/user-management",
+        icon: "Users",
+        roles: [userRole.ADMIN],
+      },
+    ],
+  },
+];
+
 const vendorNavItems: NavGroup[] = [
   {
     groupLabel: "Vendor Section",
