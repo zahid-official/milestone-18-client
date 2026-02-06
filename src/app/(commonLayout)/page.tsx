@@ -1,6 +1,7 @@
 import Banner from "@/components/modules/common/home/Banner";
 import Category from "@/components/modules/common/home/Category";
 import Collection from "@/components/modules/common/home/Collection";
+import CTA from "@/components/modules/common/home/CTA";
 import Feature from "@/components/modules/common/home/Feature";
 import Testimonial from "@/components/modules/common/home/Testimonial";
 
@@ -13,6 +14,7 @@ const HomePage = () => {
       <Category />
       <Collection />
       <Testimonial />
+      <CTA />
     </div>
   );
 };

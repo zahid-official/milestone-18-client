@@ -29,10 +29,8 @@ const TeamSwitcher = ({ defaultDashboard }: { defaultDashboard?: string }) => {
 
             {/* Brand name */}
             <div className="grid flex-1 text-left text-sm leading-tight">
-              <span className="truncate text-3xl font-bold tracking-[0.05em]">
-                Lorvic
-              </span>
-              <span className="truncate text-[10px] font-medium tracking-[0.34em] ml-0.5 -mt-0.5 text-foreground/70">
+              <span className="truncate text-3xl font-bold">Lorvic</span>
+              <span className="truncate text-[10px] font-medium tracking-[0.38em] ml-0.5 -mt-1 text-foreground/70">
                 FURNITURE
               </span>
             </div>

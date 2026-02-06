@@ -14,6 +14,7 @@ import { getDefaultDashboardRoute } from "@/routes";
 import getUserInfo from "@/utils/getUserInfo";
 import LogoutButton from "@/components/modules/auth/LogoutButton";
 import CartDialog from "./CartDialog";
+import ThemeToggler from "./ThemeToggler";
 
 const Navbar = async () => {
   const userInfo = await getUserInfo();
@@ -60,8 +61,11 @@ const Navbar = async () => {
           />
 
           {/* Cart & Buttons */}
-          <div className="flex md:gap-3.5">
-            <CartDialog />
+          <div className="flex items-center md:gap-3.5">
+            <div className="gap-2.5 flex items-center justify-center">
+              <ThemeToggler />
+              <CartDialog />
+            </div>
 
             {userInfo ? (
               <LogoutButton className="max-md:hidden" />

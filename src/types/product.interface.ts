@@ -6,8 +6,8 @@ export type ProductCategory =
   | "BED"
   | "SOFA"
   | "TABLE"
-  | "SIDE_DRAWER"
-  | "DINING_CHAIR";
+  | "SIDE DRAWER"
+  | "DINING CHAIR";
 
 export interface IProductSpecifications {
   height?: number;

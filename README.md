@@ -12,7 +12,7 @@
       width="28px"
       alt="Desktop"
     />
-    Production-Ready Multi-Vendor E-Commerce Frontend
+    Production Ready Multi Vendor E-Commerce Frontend
   </h2>
   <p><strong>Crafted for performance, built for scale</strong></p>
   <p><strong>Lorvic Client</strong> is a modern, type-safe frontend application for multi-vendor e-commerce platforms. Built with Next.js 16 App Router, React Server Components, and cutting-edge web technologies, it delivers a seamless shopping experience with role-based dashboards, secure authentication, and optimized performance.</p>

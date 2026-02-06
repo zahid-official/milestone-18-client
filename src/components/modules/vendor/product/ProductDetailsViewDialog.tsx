@@ -25,7 +25,7 @@ const currencyFormatter = new Intl.NumberFormat("en-US", {
 const formatCategory = (category?: string) => {
   if (!category) return "Not specified";
   return category
-    .split("_")
+    .split(/[_\s]+/)
     .map((part) => part.charAt(0) + part.slice(1).toLowerCase())
     .join(" ");
 };

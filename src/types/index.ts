@@ -56,3 +56,4 @@ export type ActionState<TData = Record<string, unknown>> = {
 
 // Re-export order types
 export * from "./order.interface";
+export * from "./coupon.interface";

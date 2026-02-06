@@ -13,7 +13,7 @@ import { Suspense } from "react";
 const categoryOptions = Object.values(productCategory).map((category) => ({
   value: category,
   label: category
-    .split("_")
+    .split(/[_\s]+/)
     .map((part) => part.charAt(0) + part.slice(1).toLowerCase())
     .join(" "),
 }));

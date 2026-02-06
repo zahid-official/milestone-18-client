@@ -198,6 +198,7 @@ const createOrder = async (
       productId: getTextValue(formData.get("productId")),
       quantity: parseNumber(formData.get("quantity")),
       shippingFee: parseNumber(formData.get("shippingFee")),
+      couponCode: getTextValue(formData.get("couponCode")),
     };
 
     const validatedPayload = zodValidator(createOrderSchema, payload);

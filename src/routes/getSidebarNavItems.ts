@@ -14,6 +14,18 @@ const adminNavItems: NavGroup[] = [
         icon: "Users",
         roles: [userRole.ADMIN],
       },
+      {
+        title: "Order Overview",
+        url: "/admin/order-overview",
+        icon: "ClipboardList",
+        roles: [userRole.ADMIN],
+      },
+      {
+        title: "Coupon Management",
+        url: "/admin/coupon-management",
+        icon: "TicketPercent",
+        roles: [userRole.ADMIN],
+      },
     ],
   },
 ];
@@ -32,6 +44,12 @@ const vendorNavItems: NavGroup[] = [
         title: "Order Management",
         url: "/vendor/order-management",
         icon: "ClipboardList",
+        roles: [userRole.VENDOR],
+      },
+      {
+        title: "Coupon Management",
+        url: "/vendor/coupon-management",
+        icon: "TicketPercent",
         roles: [userRole.VENDOR],
       },
     ],

@@ -1,13 +1,13 @@
-import { Facebook, Github, Instagram, Twitter } from "lucide-react";
+import { Facebook, Github, Linkedin, Twitter } from "lucide-react";
 import Link from "next/link";
 import Logo from "./Logo";
 
 const Footer = () => {
   const socialLinks = [
-    { icon: Facebook, href: "#" },
-    { icon: Instagram, href: "#" },
-    { icon: Github, href: "#" },
-    { icon: Twitter, href: "#" },
+    { icon: Facebook, href: "https://www.facebook.com/zahid.official8" },
+    { icon: Linkedin, href: "https://www.linkedin.com/in/zahid-web/" },
+    { icon: Github, href: "https://github.com/zahid-official" },
+    { icon: Twitter, href: "https://x.com/zahid_official8" },
   ];
 
   const currentYear = new Date().getFullYear();
@@ -73,21 +73,23 @@ const Footer = () => {
               title: "Resources",
               links: [
                 { label: "Features", href: "/shop" },
+                { label: "Products", href: "/shop" },
                 { label: "Guides", href: "/contact" },
-                { label: "FAQs", href: "/faq" },
                 { label: "Accessibility", href: "/contact" },
               ],
             },
             {
               title: "Contact Us",
               links: [
+                { label: "(+880) 1869618216", href: "tel:+8801869618216" },
                 {
-                  label:
-                    "House-256, Road-15, Sector-07, Uttara, Dhaka, Bangladesh",
+                  label: "zahid.official8@gmail.com",
+                  href: "mailto:zahid.official8@gmail.com",
+                },
+                {
+                  label: "House Building, Uttara, Dhaka",
                   href: "/contact",
                 },
-                { label: "(+880) 19125 48765", href: "/contact" },
-                { label: "support@lorvic.com", href: "/contact" },
               ],
             },
           ].map((section, idx) => (

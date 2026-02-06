@@ -5,9 +5,9 @@ export const productCategory = {
   BED: "BED",
   SOFA: "SOFA",
   TABLE: "TABLE",
-  SIDE_DRAWER: "SIDE_DRAWER",
-  DINING_CHAIR: "DINING_CHAIR",
-} as const satisfies Record<ProductCategory, ProductCategory>;
+  SIDE_DRAWER: "SIDE DRAWER",
+  DINING_CHAIR: "DINING CHAIR",
+} as const satisfies Record<string, ProductCategory>;
 
 export const productMaterials = {
   WOODEN: "WOODEN",

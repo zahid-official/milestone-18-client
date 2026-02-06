@@ -2,6 +2,8 @@ import Footer from "@/components/shared/Footer";
 import StickyHeader from "@/components/shared/navbar/StickyHeader";
 import CartProvider from "@/providers/CartProvider";
 
+export const dynamic = "force-dynamic";
+
 // Interface for IProps
 interface IProps {
   children: React.ReactNode;

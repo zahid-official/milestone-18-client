@@ -1,7 +1,9 @@
 "use client";
 
-import ManagementHeader from "@/components/modules/dashboard/managementPage/ManagementHeader";
 import UserManagementCreateAdminDialog from "@/components/modules/admin/userManagement/UserManagementCreateAdminDialog";
+import UserManagementCreateVendorDialog from "@/components/modules/admin/userManagement/UserManagementCreateVendorDialog";
+import ManagementHeader from "@/components/modules/dashboard/managementPage/ManagementHeader";
+import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
@@ -17,6 +19,8 @@ const UserManagementHeader = ({
   const router = useRouter();
   const [, startTransition] = useTransition();
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
+  const [isCreateVendorDialogOpen, setIsCreateVendorDialogOpen] =
+    useState(false);
 
   const title = isDeletedView ? "Deleted Users" : "User Management";
   const description = isDeletedView
@@ -38,6 +42,13 @@ const UserManagementHeader = ({
           onSuccess={handleSuccess}
         />
       )}
+      {isCreateVendorDialogOpen && (
+        <UserManagementCreateVendorDialog
+          open={isCreateVendorDialogOpen}
+          onClose={() => setIsCreateVendorDialogOpen(false)}
+          onSuccess={handleSuccess}
+        />
+      )}
       <ManagementHeader
         title={title}
         description={description}
@@ -46,7 +57,15 @@ const UserManagementHeader = ({
           icon: Plus,
           onClick: () => setIsCreateDialogOpen(true),
         }}
-      />
+      >
+        <Button
+          variant="outline"
+          onClick={() => setIsCreateVendorDialogOpen(true)}
+        >
+          <Plus className="-ml-1 -mr-1" />
+          Create Vendor
+        </Button>
+      </ManagementHeader>
     </>
   );
 };

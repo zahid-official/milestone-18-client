@@ -187,25 +187,64 @@ const OrderManagementDetailsViewDialog = ({
   const customer = getCustomerInfo(order);
 
   // Compute display-safe totals
-  const totalAmount =
-    parseNumber(order.amount) ??
-    (product?.price
-      ? product.price * order.quantity + (parseNumber(order.shippingFee) ?? 0)
-      : undefined);
+  const quantity = order.quantity || 1;
+  const shippingFeeValue = parseNumber(order.shippingFee);
+  const discountAmount = parseNumber(order.discountAmount);
+  const explicitTotal = parseNumber(order.amount);
+  const itemTotal = product?.price ? product.price * quantity : undefined;
+  const baseTotal =
+    itemTotal !== undefined
+      ? itemTotal + (shippingFeeValue ?? 0)
+      : shippingFeeValue !== undefined
+      ? shippingFeeValue
+      : undefined;
+  const totalPaid =
+    explicitTotal !== undefined
+      ? explicitTotal
+      : baseTotal !== undefined
+      ? Math.max(0, baseTotal - (discountAmount ?? 0))
+      : undefined;
+  const totalBeforeDiscount =
+    baseTotal !== undefined
+      ? baseTotal
+      : totalPaid !== undefined && discountAmount !== undefined
+      ? totalPaid + discountAmount
+      : totalPaid;
 
   const totalAmountLabel =
-    totalAmount !== undefined
-      ? currencyFormatter.format(totalAmount)
+    totalPaid !== undefined
+      ? currencyFormatter.format(totalPaid)
       : "Amount N/A";
+  const totalBeforeDiscountLabel =
+    totalBeforeDiscount !== undefined
+      ? currencyFormatter.format(totalBeforeDiscount)
+      : "N/A";
   const shippingFeeLabel =
-    parseNumber(order.shippingFee) !== undefined
-      ? currencyFormatter.format(parseNumber(order.shippingFee) as number)
+    shippingFeeValue !== undefined
+      ? currencyFormatter.format(shippingFeeValue)
       : "N/A";
 
   const unitPriceLabel =
     product?.price !== undefined
       ? currencyFormatter.format(product.price)
       : "N/A";
+
+  const discountLabel =
+    discountAmount !== undefined
+      ? discountAmount > 0
+        ? `-${currencyFormatter.format(discountAmount)}`
+        : currencyFormatter.format(discountAmount)
+      : "N/A";
+  const couponLabel = order.couponCode
+    ? `Coupon (${order.couponCode})`
+    : "Coupon Discount";
+  const hasCouponDiscount = discountAmount !== undefined || !!order.couponCode;
+  const showDiscountTotal =
+    discountAmount !== undefined &&
+    discountAmount > 0 &&
+    totalBeforeDiscount !== undefined &&
+    totalPaid !== undefined &&
+    totalBeforeDiscount > totalPaid;
 
   const materialsText =
     formatMaterials(product?.specifications) || "Not specified";
@@ -296,9 +335,17 @@ const OrderManagementDetailsViewDialog = ({
               <p className="text-xs uppercase tracking-wide text-muted-foreground">
                 Total
               </p>
-              <p className="text-xl font-bold text-primary">
-                {totalAmountLabel}
-              </p>
+              <div className="flex items-center gap-2">
+                {showDiscountTotal ? (
+                  <p className="text-xs font-semibold text-muted-foreground line-through">
+                    {totalBeforeDiscountLabel}
+                  </p>
+                ) : null}
+
+                <p className="text-xl font-bold text-primary">
+                  {totalAmountLabel}
+                </p>
+              </div>
 
               <div className="flex flex-wrap justify-end gap-2 text-xs font-semibold">
                 <span className="rounded-full bg-muted px-3 py-1 text-foreground">
@@ -376,6 +423,15 @@ const OrderManagementDetailsViewDialog = ({
               <InfoRow label="Unit Price" value={unitPriceLabel} />
               <InfoRow label="Quantity" value={order.quantity} />
               <InfoRow label="Shipping" value={shippingFeeLabel} />
+              {hasCouponDiscount ? (
+                <>
+                  <InfoRow
+                    label="Total Before Discount"
+                    value={totalBeforeDiscountLabel}
+                  />
+                  <InfoRow label={couponLabel} value={discountLabel} />
+                </>
+              ) : null}
               <InfoRow label="Total Paid" value={totalAmountLabel} />
             </div>
           </div>

@@ -14,7 +14,7 @@ import {
 import { cn } from "@/lib/utils";
 import { StarIcon } from "lucide-react";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const testimonials = [
   {
@@ -48,9 +48,39 @@ const testimonials = [
 
 // Testimonial Component
 const Testimonial = () => {
+  const sectionRef = useRef<HTMLDivElement | null>(null);
   const [api, setApi] = useState<CarouselApi>();
   const [current, setCurrent] = useState(0);
   const [count, setCount] = useState(0);
+  const [isVisible, setIsVisible] = useState(false);
+  const revealTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    if (!sectionRef.current) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting || isVisible) return;
+        if (revealTimeoutRef.current) {
+          clearTimeout(revealTimeoutRef.current);
+        }
+        revealTimeoutRef.current = setTimeout(() => {
+          setIsVisible(true);
+          observer.disconnect();
+        }, 200);
+      },
+      { threshold: 0.1 }
+    );
+
+    observer.observe(sectionRef.current);
+
+    return () => {
+      observer.disconnect();
+      if (revealTimeoutRef.current) {
+        clearTimeout(revealTimeoutRef.current);
+      }
+    };
+  }, [isVisible]);
 
   useEffect(() => {
     if (!api) return;
@@ -67,9 +97,16 @@ const Testimonial = () => {
     });
   }, [api]);
 
+  const revealClass = isVisible
+    ? "reveal-on-scroll is-visible"
+    : "reveal-on-scroll";
+
   return (
-    <div className="max-w-5xl mx-auto w-full px-10 lg:pb-36 pb-24 sm:space-y-10 -mt-5 space-y-5">
-      <div className="space-y-2 text-center">
+    <div
+      ref={sectionRef}
+      className="max-w-5xl mx-auto w-full px-10 lg:pb-36 pb-24 sm:space-y-10 -mt-5 space-y-5"
+    >
+      <div className={`${revealClass} reveal-delay-1 space-y-2 text-center`}>
         <h2 className="sm:text-4xl text-3xl font-semibold font-heading">
           Testimonials
         </h2>
@@ -77,7 +114,7 @@ const Testimonial = () => {
       </div>
 
       {/* Carousel */}
-      <div className="container w-full mx-auto px-5">
+      <div className={`${revealClass} reveal-delay-2 container w-full mx-auto px-5`}>
         <Carousel setApi={setApi}>
           <CarouselContent>
             {testimonials.map((testimonial) => (

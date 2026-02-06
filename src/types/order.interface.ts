@@ -44,6 +44,9 @@ export interface IOrder {
   customerId?: string | IOrderUserInfo;
   vendorId?: string | IOrderUserInfo;
   productId: string | OrderProductSummary;
+  couponId?: string;
+  couponCode?: string;
+  discountAmount?: number | string;
   paymentId?: string | IOrderPaymentInfo;
   quantity: number;
   amount?: number | string;

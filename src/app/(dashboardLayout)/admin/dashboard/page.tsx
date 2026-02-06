@@ -1,10 +1,12 @@
-// AdminDashboard Component
-const AdminDashboard = () => {
+import AdminDashboard from "@/components/modules/admin/adminAnalytics/AdminDashboard";
+
+// AdminDashboardPage Component
+const AdminDashboardPage = () => {
   return (
     <div>
-      <h1>Welcome to the AdminDashboard Component</h1>
+      <AdminDashboard />
     </div>
   );
 };
 
-export default AdminDashboard;
+export default AdminDashboardPage;

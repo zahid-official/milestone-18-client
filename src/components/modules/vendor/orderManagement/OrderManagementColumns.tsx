@@ -108,12 +108,25 @@ const calculateAmount = (order: IOrder) => {
   const quantity = order.quantity || 1;
   const itemTotal = product?.price ? product.price * quantity : undefined;
   const shippingFee = parseNumber(order.shippingFee);
+  const discountAmount = parseNumber(order.discountAmount);
 
   if (itemTotal !== undefined) {
-    return shippingFee !== undefined ? itemTotal + shippingFee : itemTotal;
+    const total =
+      shippingFee !== undefined ? itemTotal + shippingFee : itemTotal;
+    if (discountAmount !== undefined) {
+      return Math.max(0, total - discountAmount);
+    }
+    return total;
   }
 
-  return shippingFee;
+  if (shippingFee !== undefined) {
+    if (discountAmount !== undefined) {
+      return Math.max(0, shippingFee - discountAmount);
+    }
+    return shippingFee;
+  }
+
+  return undefined;
 };
 
 const renderStatusBadge = (status?: string) => {

@@ -7,7 +7,7 @@ const authRoutes = ["/login", "/register"];
 // Protected routes
 const commonProtectedRoutes: RouteConfig = {
   exactRoutes: ["/profile", "/change-password", "/checkout"],
-  patternRoutes: [/^\/shop\/[^/]+$/, /^\/payment(\/.*)?$/],
+  patternRoutes: [/^\/payment(\/.*)?$/],
 };
 
 const adminProtectedRoutes: RouteConfig = {
