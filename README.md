@@ -20,7 +20,7 @@
 
 <div align="center">
     
-  [![Version](https://img.shields.io/badge/version-1.0.0-blue.svg?style=for-the-badge)](https://github.com/zahid-official/milestone-18-client)
+  [![Version](https://img.shields.io/badge/version-1.0.0-blue.svg?style=for-the-badge)](https://github.com/zahid-official/milestone-18-lorvicClient)
   [![Next.js](https://img.shields.io/badge/Next.js-16-black.svg?style=for-the-badge&logo=next.js&logoColor=white)](https://nextjs.org)
   [![React](https://img.shields.io/badge/React-19-149eca.svg?style=for-the-badge&logo=react&logoColor=white)](https://react.dev/)
   [![TypeScript](https://img.shields.io/badge/TypeScript-5.0-3178C6.svg?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
@@ -32,7 +32,7 @@
   [![Deployed on Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-black.svg?style=for-the-badge&logo=vercel)](https://vercel.com)
   [![Radix UI](https://img.shields.io/badge/Radix%20UI-161618.svg?style=for-the-badge&logo=radix-ui&logoColor=white)](https://www.radix-ui.com/)
   [![License](https://img.shields.io/badge/license-MIT-22333b.svg?style=for-the-badge)](LICENSE)
-  [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-0081a7.svg?style=for-the-badge)](https://github.com/zahid-official/milestone-18-client/pulls)
+  [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-0081a7.svg?style=for-the-badge)](https://github.com/zahid-official/milestone-18-lorvicClient/pulls)
 </div>
 
 ## ✨ Features
@@ -212,8 +212,8 @@ graph TB
 
 ```bash
 # 1. Clone the repository
-git clone https://github.com/zahid-official/milestone-18-client.git
-cd milestone-18-client
+git clone https://github.com/zahid-official/milestone-18-lorvicClient.git
+cd milestone-18-lorvicClient
 
 # 2. Install dependencies (pnpm recommended)
 pnpm install
@@ -277,6 +277,9 @@ NODE_ENV=development
 ---
 
 ## 📁 **Project Structure**
+
+<details>
+<summary><b>Click to view project folder structure</b></summary>
 
 ```
 lorvic-frontend/
@@ -360,6 +363,8 @@ lorvic-frontend/
 ├── 📄 package.json                      # Dependencies
 └── 📄 README.md                         # This file
 ```
+
+</details>
 
 ---
 
@@ -808,7 +813,7 @@ const debouncedSearch = useMemo(
 
 <div>
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/zahid-official/milestone-18-client)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/zahid-official/milestone-18-lorvicClient)
 
 </div>
 
@@ -898,8 +903,8 @@ SENTRY_DSN=https://xxxxx@sentry.io/xxxxx
 | ------------------ | ------------------------------------------------------------------------ |
 | 🌐 **Live App** | [lorvic-official.vercel.app](https://lorvic-official.vercel.app/)        |
 | 🔌 **Live API**    | [lorvic-api.vercel.app](https://lorvic-api.vercel.app/)                  |
-| 📱 **Client Repo** | [GitHub - Client](https://github.com/zahid-official/milestone-18-client) |
-| 🗄️ **Server Repo** | [GitHub - Server](https://github.com/zahid-official/milestone-18-server) |
+| 📱 **Client Repo** | [GitHub - Client](https://github.com/zahid-official/milestone-18-lorvicClient) |
+| 🗄️ **Server Repo** | [GitHub - Server](https://github.com/zahid-official/milestone-18-lorvicServer) |
 
 </div>
 
