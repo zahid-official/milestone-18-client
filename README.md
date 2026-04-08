@@ -1,6 +1,6 @@
 <div align="center">
   <img
-    src="https://capsule-render.vercel.app/api?type=waving&color=gradient&customColorList=6&height=200&section=header&text=Lorvic%20Client&fontSize=50&fontAlignY=35&animation=fadeIn&desc=Enterprise%20E-Commerce%20Experience&descAlignY=55&descSize=18"
+    src="https://capsule-render.vercel.app/api?type=waving&color=gradient&customColorList=6&height=200&section=header&text=Lorvic&fontSize=50&fontAlignY=35&animation=fadeIn&desc=Enterprise%20E-Commerce%20Experience&descAlignY=55&descSize=18"
     alt="Header"
   />
 </div>
@@ -15,7 +15,7 @@
     Production Ready Multi Vendor E-Commerce Frontend
   </h2>
   <p><strong>Crafted for performance, built for scale</strong></p>
-  <p><strong>Lorvic Client</strong> is a modern, type-safe frontend application for multi-vendor e-commerce platforms. Built with Next.js 16 App Router, React Server Components, and cutting-edge web technologies, it delivers a seamless shopping experience with role-based dashboards, secure authentication, and optimized performance.</p>
+  <p><strong>Lorvic</strong> is a modern, type-safe frontend application for multi-vendor e-commerce platforms. Built with Next.js 16 App Router, React Server Components, and cutting-edge web technologies, it delivers a seamless shopping experience with role-based dashboards, secure authentication, and optimized performance.</p>
 </div>
 
 <div align="center">
@@ -664,7 +664,7 @@ export async function serverFetchApi(endpoint: string, options?: RequestInit) {
         ...options?.headers,
       },
       credentials: "include",
-    }
+    },
   );
 
   return handleResponse(response);
@@ -782,14 +782,12 @@ const debouncedSearch = useMemo(
    ```
 
 3. **Make Changes**
-
    - Follow existing code structure
    - Use TypeScript for type safety
    - Add Zod schemas for validation
    - Create reusable components
 
 4. **Test Locally**
-
    - Test in multiple browsers
    - Check mobile responsiveness
    - Verify auth flows
@@ -898,7 +896,7 @@ SENTRY_DSN=https://xxxxx@sentry.io/xxxxx
 
 | Resource           | URL                                                                      |
 | ------------------ | ------------------------------------------------------------------------ |
-| 🌐 **Live Client** | [lorvic-official.vercel.app](https://lorvic-official.vercel.app/)        |
+| 🌐 **Live App** | [lorvic-official.vercel.app](https://lorvic-official.vercel.app/)        |
 | 🔌 **Live API**    | [lorvic-api.vercel.app](https://lorvic-api.vercel.app/)                  |
 | 📱 **Client Repo** | [GitHub - Client](https://github.com/zahid-official/milestone-18-client) |
 | 🗄️ **Server Repo** | [GitHub - Server](https://github.com/zahid-official/milestone-18-server) |
@@ -918,3 +916,7 @@ Contributions make the open source community amazing! Any contributions you make
 4. Push to the Branch (git push origin feature/AmazingFeature)
 5. Open a Pull Request
 ```
+
+<div align="center">
+<p><b>Lorvic</b> - <i> A e-commerce platform that redefines the shopping experience. </i></p>
+</div>
